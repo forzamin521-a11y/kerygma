@@ -1,0 +1,1554 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060a14">
+<title>KERYGMA FC 전술 노트</title>
+<link rel="icon" id="favicon">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --bg:#060a14;
+  --glass:rgba(15,24,45,.62);
+  --glass-hi:rgba(255,255,255,.045);
+  --stroke:rgba(255,255,255,.09);
+  --stroke-accent:rgba(96,140,255,.5);
+  --text:#eaf0fc;
+  --muted:#93a0bd;
+  --dim:#5f6b88;
+  --accent:#7aa2ff;
+  --accent-2:#2f5bea;
+  --kit:#ffffff;
+  --kit-ink:#0b1a4a;
+  --cyan:#4fd8ff;
+  --lime:#a6f25c;
+  --orange:#ff9f43;
+  --red:#ff5d73;
+  --navy:#0b1426;
+  --radius:22px;
+  --display:'Bebas Neue',Impact,'Arial Narrow',sans-serif;
+  --sans:'Pretendard','Pretendard Variable',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;line-height:1.6;-webkit-font-smoothing:antialiased;word-break:keep-all}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- Stadium background ---------- */
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;
+  background:
+    radial-gradient(1100px 560px at 12% -12%,rgba(79,124,255,.16),transparent 60%),
+    radial-gradient(900px 520px at 92% -6%,rgba(79,216,255,.11),transparent 60%),
+    radial-gradient(900px 600px at 50% 115%,rgba(34,150,84,.20),transparent 62%),
+    linear-gradient(180deg,#070d1a 0%,#05080f 100%)}
+.bg::before{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);
+  background-size:52px 52px;
+  -webkit-mask-image:radial-gradient(ellipse at 50% 0%,#000 25%,transparent 72%);mask-image:radial-gradient(ellipse at 50% 0%,#000 25%,transparent 72%)}
+.beam{position:absolute;top:-30vh;width:38vw;height:120vh;filter:blur(40px);opacity:.5;transform-origin:50% 0;
+  background:linear-gradient(180deg,rgba(170,195,255,.20),transparent 70%);animation:sway 16s ease-in-out infinite alternate}
+.beam.l{left:-6vw;transform:rotate(-24deg)}
+.beam.r{right:-6vw;transform:rotate(24deg);animation-delay:-8s;background:linear-gradient(180deg,rgba(190,236,255,.18),transparent 70%)}
+@keyframes sway{from{rotate:-4deg}to{rotate:4deg}}
+
+.wrap{max-width:1480px;margin:0 auto;padding:0 24px}
+
+/* ---------- Glass ---------- */
+.glass{background:var(--glass);border:1px solid var(--stroke);border-radius:var(--radius);
+  -webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%);
+  box-shadow:0 24px 70px -28px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.06)}
+
+/* ---------- Top bar ---------- */
+.topbar{position:sticky;top:0;z-index:20;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  background:linear-gradient(180deg,rgba(6,10,20,.85),rgba(6,10,20,.55));border-bottom:1px solid var(--stroke)}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:68px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.crest-sm{height:48px;width:auto;flex:none;filter:drop-shadow(0 0 1px rgba(255,255,255,.7)) drop-shadow(0 4px 14px rgba(110,140,255,.35))}
+.brand-text b{display:block;font-family:var(--display);font-size:26px;letter-spacing:.06em;line-height:1;
+  background:linear-gradient(90deg,#fff 35%,#a9c2ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand-text small{display:block;font-size:11px;letter-spacing:.24em;color:var(--muted);text-transform:uppercase;margin-top:3px}
+.season{font-size:12px;color:var(--accent);border:1px solid var(--stroke-accent);padding:6px 12px;border-radius:999px;white-space:nowrap;background:rgba(79,124,255,.06)}
+
+/* ---------- Hero ---------- */
+.hero{padding-top:44px;padding-bottom:26px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:40px;align-items:center}
+.hero-crest{position:relative;width:250px;display:grid;place-items:center}
+.hero-crest::before{content:"";position:absolute;inset:-18% -30%;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(96,130,255,.32),rgba(79,124,255,.10) 55%,transparent 75%);filter:blur(10px)}
+.hero-crest img{position:relative;width:100%;height:auto;animation:float 7s ease-in-out infinite;
+  filter:drop-shadow(0 0 1.5px rgba(255,255,255,.75)) drop-shadow(0 24px 40px rgba(0,0,0,.6))}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-10px) rotate(1.5deg)}}
+footer .crest-foot{height:44px;width:auto;display:block;margin:0 auto 10px;opacity:.85;filter:drop-shadow(0 0 1px rgba(255,255,255,.6))}
+.hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.22em;color:var(--accent);text-transform:uppercase;font-weight:700}
+.hero .eyebrow::before{content:"";width:22px;height:2px;background:var(--accent);border-radius:2px}
+.hero h1{font-size:clamp(30px,4.6vw,56px);line-height:1.12;font-weight:800;letter-spacing:-.02em;margin:12px 0 12px}
+.hero h1 em{font-style:normal;background:linear-gradient(100deg,#ffffff 0%,#c3d4ff 40%,#5b86ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{color:var(--muted);max-width:720px;font-size:clamp(14px,1.4vw,16px)}
+.howto{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.howto span{font-size:12.5px;padding:7px 12px;border-radius:999px;border:1px solid var(--stroke);background:var(--glass-hi);color:#cdd6ea}
+.howto kbd{font-family:inherit;font-size:11px;padding:1px 6px;border-radius:6px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);margin:0 2px}
+
+/* ---------- Scenario cards ---------- */
+.scn-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:8px;margin-bottom:22px}
+.scn{position:relative;text-align:center;padding:20px 20px 18px;border-radius:var(--radius);overflow:hidden;
+  background:var(--glass);border:1px solid var(--stroke);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;
+  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.scn::before{content:"";position:absolute;inset:0;opacity:0;transition:opacity .3s ease;
+  background:radial-gradient(420px 160px at 0% 0%,rgba(79,124,255,.20),transparent 70%)}
+.scn:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.18)}
+.scn[aria-pressed="true"]{border-color:var(--stroke-accent);box-shadow:0 0 0 1px rgba(79,124,255,.25),0 18px 50px -18px rgba(79,124,255,.35)}
+.scn[aria-pressed="true"]::before{opacity:1}
+.scn > *{position:relative}
+.scn .num{font-family:var(--display);font-size:46px;line-height:.9;color:transparent;-webkit-text-stroke:1px rgba(79,124,255,.6)}
+.scn[aria-pressed="true"] .num{color:var(--accent);-webkit-text-stroke:0}
+.scn .top{display:flex;flex-direction:column;align-items:center;gap:10px}
+.scn .vs{font-size:11.5px;font-weight:700;color:var(--red);background:rgba(255,93,115,.1);border:1px solid rgba(255,93,115,.3);padding:4px 9px;border-radius:999px;white-space:nowrap}
+.scn h3{font-size:20px;margin-top:10px;font-weight:800}
+.scn .en{font-family:var(--display);letter-spacing:.08em;color:var(--muted);font-size:15px}
+.scn p{color:#b7c1d8;font-size:13.5px;margin-top:8px}
+.scn .lvl{margin-top:12px;font-size:12px;color:var(--muted)}
+.scn .lvl b{color:var(--accent);letter-spacing:2px}
+.scn .lvl b i{font-style:normal;color:rgba(255,255,255,.18)}
+
+/* ---------- Category switch ---------- */
+.cat-bar{display:flex;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.cat{display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 22px;border-radius:16px;border:1px solid var(--stroke);background:var(--glass);
+  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);font-size:15px;font-weight:800;color:var(--muted);transition:all .25s}
+.cat:hover{border-color:rgba(255,255,255,.2);color:var(--text)}
+.cat svg{width:20px;height:20px}
+.cat small{font-family:var(--display);letter-spacing:.12em;font-size:14px;font-weight:400;opacity:.65}
+.cat[aria-pressed="true"]{color:var(--accent);border-color:var(--stroke-accent);background:linear-gradient(135deg,rgba(79,124,255,.18),rgba(79,124,255,.04))}
+.cat[data-cat="def"][aria-pressed="true"]{color:var(--cyan);border-color:rgba(79,216,255,.42);background:linear-gradient(135deg,rgba(79,216,255,.16),rgba(79,216,255,.03))}
+.scn.def::before{background:radial-gradient(420px 160px at 0% 0%,rgba(79,216,255,.18),transparent 70%)}
+.scn.def[aria-pressed="true"]{border-color:rgba(79,216,255,.42);box-shadow:0 0 0 1px rgba(79,216,255,.22),0 18px 50px -18px rgba(79,216,255,.35)}
+.scn.def .num{-webkit-text-stroke-color:rgba(79,216,255,.6)}
+.scn.def[aria-pressed="true"] .num{color:var(--cyan)}
+.scn.def .vs{color:var(--cyan);background:rgba(79,216,255,.08);border-color:rgba(79,216,255,.3)}
+.co.big{font-size:3.4px;stroke-width:1px}
+
+/* ---------- Plan switch ---------- */
+.plans{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:12px;padding:6px;border-radius:14px;background:rgba(0,0,0,.22);border:1px solid var(--stroke)}
+.plans[hidden]{display:none}
+.plans-lbl{font-size:12px;font-weight:800;color:var(--muted);padding:0 8px}
+.plans button{height:38px;padding:0 14px;border-radius:10px;font-size:13px;font-weight:700;color:var(--muted);display:inline-flex;align-items:center;gap:7px;transition:all .2s}
+.plans button:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.plans button b{font-family:var(--display);font-weight:400;letter-spacing:.06em;font-size:17px;color:var(--text)}
+.plans button[aria-pressed="true"]{background:linear-gradient(135deg,rgba(79,124,255,.38),rgba(79,124,255,.12));color:#fff;box-shadow:inset 0 0 0 1px var(--stroke-accent)}
+.trigger{margin-bottom:12px;padding:12px 14px;border-radius:14px;background:rgba(255,93,115,.08);border:1px solid rgba(255,93,115,.3);font-size:13.5px;color:#ffd9de}
+.trigger b{display:block;color:var(--red);font-size:12px;letter-spacing:.06em;margin-bottom:3px}
+.plan-badge{display:inline-block;margin-left:6px;font-size:11px;font-weight:800;color:#fff;background:var(--accent-2);border-radius:6px;padding:1px 7px;letter-spacing:.02em}
+
+/* ---------- Board ---------- */
+.board{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;align-items:start;padding-bottom:40px}
+.pitch-card{padding:18px 18px 16px;min-width:0}
+.pitch-card:fullscreen{border-radius:0;overflow:auto;background:#060a14}
+.pc-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.pc-head .eyebrow{font-family:var(--display);letter-spacing:.14em;color:var(--accent);font-size:16px}
+.pc-head h2{font-size:clamp(20px,2.2vw,26px);font-weight:800;line-height:1.2}
+.step-pill{display:flex;align-items:baseline;gap:5px;padding:6px 14px;border-radius:14px;background:rgba(79,124,255,.08);border:1px solid var(--stroke-accent);font-family:var(--display);white-space:nowrap}
+.step-pill span{font-size:13px;letter-spacing:.14em;color:var(--muted)}
+.step-pill b{font-size:30px;color:var(--accent);line-height:1;font-weight:400}
+.step-pill i,.step-pill em{font-style:normal;font-size:18px;color:var(--muted)}
+.step-title{margin:12px 0 12px;font-size:clamp(15px,1.5vw,18px);font-weight:700;display:flex;gap:10px;align-items:center;min-height:28px}
+.step-title::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(79,124,255,.18),0 0 18px var(--accent);flex:none}
+
+.pitch-wrap{position:relative;border-radius:16px;overflow:hidden;background:#0d3a22;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 30px 60px -30px rgba(0,0,0,.9)}
+#pitch{display:block;width:100%;height:auto;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+#pitch .pl{cursor:pointer}
+#pitch .pl .body{transition:fill .2s}
+#pitch .pl.dim{opacity:.22}
+#pitch .pl .sel-ring{opacity:0;transform-box:fill-box;transform-origin:center}
+#pitch .pl.sel .sel-ring{opacity:1;animation:spin 6s linear infinite}
+#pitch .pl:hover .body{filter:brightness(1.12)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.arw{animation:arwIn .45s ease both}
+.arw.draw{stroke-dasharray:1;animation:arwIn .3s ease both,draw .55s ease-out both}
+@keyframes arwIn{from{opacity:0}to{opacity:1}}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.co{font-family:var(--sans);font-weight:800;font-size:2.15px;paint-order:stroke;stroke:#06101e;stroke-width:.75px;stroke-linejoin:round;animation:coIn .5s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes coIn{from{opacity:0;transform:translateY(1.2px)}to{opacity:1;transform:none}}
+.zone{animation:arwIn .6s ease both}
+.lane-lbl{font-family:var(--sans);font-size:1.5px;font-weight:700;fill:rgba(255,255,255,.55)}
+
+/* selected player bar */
+.selbar{margin-top:12px;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--stroke);min-height:62px}
+.selbar.on{border-color:var(--stroke-accent);background:linear-gradient(90deg,rgba(79,124,255,.10),rgba(255,255,255,.02))}
+.selbar .hint{color:var(--muted);font-size:13.5px}
+.selbar .sb-num{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:20px;background:var(--kit);color:var(--kit-ink);box-shadow:0 0 0 3px rgba(79,124,255,.45)}
+.selbar .sb-num.gk{background:var(--cyan)}
+.selbar .sb-txt{flex:1;min-width:0}
+.selbar .sb-txt b{font-size:14px}
+.selbar .sb-txt p{font-size:13.5px;color:#d6deef;margin-top:2px}
+.selbar .x{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--stroke);color:var(--muted)}
+
+/* timeline */
+.timeline{position:relative;margin:18px 6px 6px;height:26px}
+.tl-track{position:absolute;left:0;right:0;top:11px;height:4px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden}
+.tl-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent-2),var(--accent));box-shadow:0 0 12px var(--accent)}
+.tl-dots{position:absolute;inset:0}
+.tl-dot{position:absolute;top:3px;width:20px;height:20px;margin-left:-10px;border-radius:50%;background:#1a2440;border:2px solid rgba(255,255,255,.18);font-size:10px;font-weight:800;color:var(--muted);display:grid;place-items:center;transition:all .25s}
+.tl-dot.done{background:var(--accent-2);border-color:var(--accent);color:#fff}
+.tl-dot.cur{background:var(--accent);border-color:#e6edff;color:#fff;transform:scale(1.2);box-shadow:0 0 0 5px rgba(79,124,255,.18)}
+
+/* controls */
+.controls{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px}
+.ctl-main,.ctl-opts{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn{height:42px;min-width:42px;padding:0 14px;border-radius:12px;border:1px solid var(--stroke);background:rgba(255,255,255,.04);display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:600;transition:background .2s,border-color .2s,transform .1s}
+.btn:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+.btn:active{transform:scale(.96)}
+.btn svg{width:18px;height:18px}
+.btn.play{height:50px;min-width:118px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border:0;font-weight:800;font-size:14px;box-shadow:0 10px 30px -10px rgba(79,124,255,.7)}
+.btn.play:hover{filter:brightness(1.07)}
+.btn[aria-pressed="true"]{border-color:var(--stroke-accent);background:rgba(79,124,255,.12);color:var(--accent)}
+.seg{display:inline-flex;padding:3px;border-radius:12px;border:1px solid var(--stroke);background:rgba(255,255,255,.03)}
+.seg button{height:34px;padding:0 10px;border-radius:9px;font-size:12.5px;font-weight:700;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:rgba(79,124,255,.16);color:var(--accent)}
+
+/* legend */
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--stroke);font-size:12.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend svg{width:34px;height:12px;flex:none}
+
+/* ---------- Side panel ---------- */
+.side{position:sticky;top:84px;display:flex;flex-direction:column;max-height:calc(100vh - 100px);min-width:0}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:6px;margin:12px 12px 0;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid var(--stroke)}
+.tabs button{height:38px;border-radius:10px;font-size:13.5px;font-weight:700;color:var(--muted);transition:all .2s}
+.tabs button[aria-selected="true"]{background:linear-gradient(135deg,rgba(79,124,255,.22),rgba(79,124,255,.08));color:var(--accent);box-shadow:inset 0 0 0 1px rgba(79,124,255,.3)}
+.tab-body{padding:16px 18px 20px;overflow:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent}
+.tab-body[hidden]{display:none}
+
+.now-card{padding:16px;border-radius:16px;background:linear-gradient(160deg,rgba(79,124,255,.12),rgba(255,255,255,.02));border:1px solid var(--stroke-accent)}
+.now-card .tag{font-family:var(--display);letter-spacing:.14em;color:var(--accent);font-size:14px}
+.now-card h4{font-size:17px;line-height:1.35;margin:2px 0 8px}
+.now-card p{font-size:14px;color:#d3dbec}
+.key{margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(6,10,20,.55);border-left:3px solid var(--accent);font-size:13.5px;color:#dfe8ff}
+.key b{color:var(--accent);margin-right:4px}
+
+.step-list{list-style:none;margin-top:16px;display:flex;flex-direction:column;gap:6px}
+.step-list button{width:100%;display:flex;gap:10px;align-items:flex-start;text-align:left;padding:10px 12px;border-radius:12px;border:1px solid transparent;font-size:13.5px;color:#b9c3da;transition:all .2s}
+.step-list button:hover{background:rgba(255,255,255,.04)}
+.step-list button.cur{background:rgba(79,124,255,.08);border-color:rgba(79,124,255,.28);color:var(--text)}
+.step-list .n{flex:none;width:24px;height:24px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:800;background:rgba(255,255,255,.07);color:var(--muted)}
+.step-list button.cur .n{background:var(--accent);color:#fff}
+.step-list button.done .n{color:var(--accent)}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chips button{height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--stroke);font-size:12.5px;font-weight:700;color:var(--muted)}
+.chips button[aria-pressed="true"]{border-color:var(--stroke-accent);color:var(--accent);background:rgba(79,124,255,.1)}
+.role-list{display:flex;flex-direction:column;gap:8px}
+.role{display:flex;gap:12px;width:100%;text-align:left;padding:12px;border-radius:14px;border:1px solid var(--stroke);background:rgba(255,255,255,.025);transition:all .2s}
+.role:hover{border-color:rgba(255,255,255,.18)}
+.role.sel{border-color:var(--stroke-accent);background:rgba(79,124,255,.08)}
+.role .badge{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:18px;background:var(--kit);color:var(--kit-ink);box-shadow:inset 0 0 0 2px var(--accent-2)}
+.role .badge.gk{background:var(--cyan)}
+.role b{font-size:13.5px;display:block}
+.role b small{color:var(--muted);font-weight:600;margin-left:4px}
+.role p{font-size:13.5px;color:#d6deef;margin-top:3px}
+.role p.gen{font-size:12.5px;color:var(--muted)}
+.role .live{display:inline-block;font-size:10.5px;font-weight:800;color:#fff;background:var(--accent);border-radius:6px;padding:0 6px;margin-right:6px;vertical-align:1px}
+
+.note-sec{margin-bottom:18px}
+.note-sec h5{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.note-sec h5 i{width:18px;height:18px;border-radius:6px;display:grid;place-items:center;font-style:normal;font-size:11px}
+.note-sec ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.note-sec li{font-size:14px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid var(--stroke);color:#d8e0f0}
+.note-sec.when p{font-size:14px;padding:12px;border-radius:12px;background:rgba(79,216,255,.06);border:1px solid rgba(79,216,255,.25);color:#d8f4ff}
+.note-sec.good h5 i{background:rgba(166,242,92,.18);color:var(--lime)}
+.note-sec.bad h5 i{background:rgba(255,93,115,.18);color:var(--red)}
+.note-sec.tip h5 i{background:rgba(79,124,255,.18);color:var(--accent)}
+.note-sec.when h5 i{background:rgba(79,216,255,.18);color:var(--cyan)}
+.note-sec.bad li{border-color:rgba(255,93,115,.2)}
+
+footer{padding-top:26px;padding-bottom:40px;color:var(--dim);font-size:12.5px;text-align:center}
+footer b{font-family:var(--display);letter-spacing:.16em;color:var(--accent);font-weight:400;font-size:15px}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1180px){
+  .board{grid-template-columns:minmax(0,1fr)}
+  .side{position:static;max-height:none}
+}
+@media (max-width:980px){
+  .hero{grid-template-columns:minmax(0,1fr);gap:18px}
+  .hero-crest{order:-1;width:120px;justify-self:start}
+}
+@media (max-width:820px){
+  .scn-list{grid-template-columns:minmax(0,1fr);gap:10px}
+  .scn{padding:16px}
+  .scn .num{font-size:36px}
+  .scn p{display:none}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .topbar .wrap{height:60px}
+  .season{display:none}
+  .hero{padding-top:28px;padding-bottom:18px}
+  .cat{flex:1;justify-content:center;padding:0 10px;font-size:14px}
+  .cat small{display:none}
+  .pitch-card{padding:12px}
+  .pitch-wrap{border-radius:12px}
+  .controls{justify-content:center}
+  .ctl-main{width:100%;justify-content:center}
+  .ctl-opts{width:100%;justify-content:center}
+  .btn .t{display:none}
+  .btn.play .t{display:inline}
+  .tab-body{padding:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  .beam,.hero-crest img{animation:none}
+  *{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><div class="beam l"></div><div class="beam r"></div></div>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <img class="crest-sm" data-emblem alt="KERYGMA FC 엠블럼" width="34" height="48">
+      <div class="brand-text"><b>KERYGMA FC</b><small>Tactical Notebook</small></div>
+    </div>
+    <span class="season">2026 시즌 · 전술 노트</span>
+  </div>
+</header>
+
+<section class="wrap hero">
+ <div class="hero-text">
+  <span class="eyebrow">Build-up &amp; Pressing</span>
+  <h1>골키퍼부터 시작하는 공격,<br><em>다 함께 뺏는 압박 수비</em></h1>
+  <p class="lead">공격 전개 또는 수비 압박에서 전술을 고르고 ▶ 재생을 누르세요. 단계마다 공이 어디로 가고, 누가 어디로 움직이는지 보여줍니다. 내 포지션(흰 원)을 누르면 그 순간 내가 해야 할 일이 나와요.</p>
+  <div class="howto">
+    <span>▶ 재생 / <kbd>Space</kbd></span>
+    <span>단계 이동 <kbd>←</kbd><kbd>→</kbd></span>
+    <span>선수 탭 = 내 역할</span>
+    <span>상대팀·레인 표시 켜고 끄기</span>
+  </div>
+ </div>
+ <div class="hero-crest" aria-hidden="true"><img data-emblem alt="" width="250" height="357"></div>
+</section>
+
+<div class="wrap cat-bar" id="catBar" role="group" aria-label="전술 분류">
+  <button class="cat" data-cat="atk" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M9 5h10v10"/></svg>공격 전개<small>BUILD-UP</small></button>
+  <button class="cat" data-cat="def" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>수비 압박<small>PRESSING</small></button>
+</div>
+<nav class="wrap scn-list" id="scnList" aria-label="전술 선택"></nav>
+
+<main class="wrap board">
+  <section class="pitch-card glass" id="pitchCard" aria-label="전술 보드">
+    <div class="pc-head">
+      <div>
+        <div class="eyebrow" id="scnEn"></div>
+        <h2 id="scnTitle"></h2>
+      </div>
+      <div class="step-pill" aria-live="polite"><span>STEP</span><b id="stepNo">1</b><i>/</i><em id="stepTotal">6</em></div>
+    </div>
+    <div class="plans" id="plans" role="group" aria-label="대안 플랜" hidden></div>
+    <div class="step-title" id="stepTitle"></div>
+
+    <div class="pitch-wrap">
+      <svg id="pitch" viewBox="-4 -5 113 78" role="img" aria-label="축구 경기장 전술 애니메이션">
+        <defs id="defs">
+          <radialGradient id="vign" cx="50%" cy="50%" r="70%"><stop offset="60%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".45"/></radialGradient>
+          <linearGradient id="light" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".10"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
+          <radialGradient id="gKit" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#eef2fb"/><stop offset="1" stop-color="#b9c6e4"/></radialGradient>
+          <radialGradient id="gCyan" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#c9f4ff"/><stop offset=".55" stop-color="#4fd8ff"/><stop offset="1" stop-color="#1b8fb8"/></radialGradient>
+          <radialGradient id="gRed" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#ff9aa8"/><stop offset=".6" stop-color="#e8445a"/><stop offset="1" stop-color="#9c1f33"/></radialGradient>
+          <radialGradient id="gBall" cx="35%" cy="30%" r="70%"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#cfd6e4"/></radialGradient>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation=".6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <g id="field"></g>
+        <g id="lanes" style="display:none"></g>
+        <g id="zones"></g>
+        <g id="oppArrows"></g>
+        <g id="arrows"></g>
+        <g id="opp"></g>
+        <g id="team"></g>
+        <g id="ballLayer"></g>
+        <g id="callouts"></g>
+      </svg>
+    </div>
+
+    <div class="selbar" id="selbar" aria-live="polite"></div>
+
+    <div class="timeline">
+      <div class="tl-track"><div class="tl-fill" id="tlFill"></div></div>
+      <div class="tl-dots" id="tlDots"></div>
+    </div>
+
+    <div class="controls">
+      <div class="ctl-main">
+        <button class="btn" id="btnPrev" aria-label="이전 단계"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span class="t">이전</span></button>
+        <button class="btn play" id="btnPlay" aria-label="재생"><svg id="icoPlay" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg><span class="t" id="playTxt">재생</span></button>
+        <button class="btn" id="btnNext" aria-label="다음 단계"><span class="t">다음</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+        <button class="btn" id="btnReplay" aria-label="이 단계 다시 보기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
+      </div>
+      <div class="ctl-opts">
+        <div class="seg" id="speedSeg" role="group" aria-label="재생 속도">
+          <button data-sp="0.6" aria-pressed="false">느리게</button>
+          <button data-sp="1" aria-pressed="true">보통</button>
+          <button data-sp="1.6" aria-pressed="false">빠르게</button>
+        </div>
+        <button class="btn" id="tgOpp" aria-pressed="true" title="상대팀 표시">상대팀</button>
+        <button class="btn" id="tgLanes" aria-pressed="false" title="5레인(측면·하프스페이스·중앙) 표시">레인</button>
+        <button class="btn" id="btnFull" aria-label="전체 화면"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+      </div>
+    </div>
+
+    <div class="legend" aria-label="범례">
+      <span><svg viewBox="0 0 34 12"><line x1="2" y1="6" x2="26" y2="6" stroke="#fff" stroke-width="2"/><path d="M24 1.5 32 6l-8 4.5z" fill="#fff"/></svg>패스</span>
+      <span><svg viewBox="0 0 34 12"><line x1="2" y1="6" x2="26" y2="6" stroke="#a6f25c" stroke-width="2"/><path d="M24 1.5 32 6l-8 4.5z" fill="#a6f25c"/></svg>침투 패스</span>
+      <span><svg viewBox="0 0 34 12"><path d="M2 10Q16 -4 26 6" fill="none" stroke="#f3c560" stroke-width="2"/><path d="M24 1.5 32 7l-8 3.5z" fill="#f3c560"/></svg>롱킥</span>
+      <span><svg viewBox="0 0 34 12"><line x1="2" y1="6" x2="26" y2="6" stroke="#4fd8ff" stroke-width="2" stroke-dasharray="4 3"/><path d="M24 1.5 32 6l-8 4.5z" fill="#4fd8ff"/></svg>선수 이동</span>
+      <span><svg viewBox="0 0 34 12"><path d="M2 6q3-5 6 0t6 0 6 0 6 0" fill="none" stroke="#ff9f43" stroke-width="2"/><path d="M24 1.5 32 6l-8 4.5z" fill="#ff9f43"/></svg>드리블</span>
+      <span><svg viewBox="0 0 34 12"><line x1="2" y1="6" x2="30" y2="6" stroke="#ff5d73" stroke-width="2" stroke-dasharray="3 3"/><path d="M12 2l8 8M20 2l-8 8" stroke="#ff5d73" stroke-width="2"/></svg>막힌 길</span>
+      <span><svg viewBox="0 0 34 12"><line x1="2" y1="6" x2="26" y2="6" stroke="#ff4fa3" stroke-width="2.4" stroke-dasharray="6 2"/><path d="M24 1.5 32 6l-8 4.5z" fill="#ff4fa3"/></svg>압박 질주</span>
+      <span><svg viewBox="0 0 34 12"><path d="M3 6 31 1v10z" fill="rgba(79,216,255,.3)" stroke="#4fd8ff" stroke-width=".8" stroke-dasharray="2 1.5"/></svg>몸으로 가린 패스 길</span>
+      <span><svg viewBox="0 0 34 12"><line x1="2" y1="6" x2="26" y2="6" stroke="#ff8a98" stroke-width="2"/><path d="M24 1.5 32 6l-8 4.5z" fill="#ff8a98"/></svg>상대 패스</span>
+      <span><svg viewBox="0 0 34 12"><line x1="2" y1="6" x2="26" y2="6" stroke="#a6f25c" stroke-width="2.4" stroke-dasharray="4 2"/><path d="M24 1.5 32 6l-8 4.5z" fill="#a6f25c"/></svg>가로채기·탈취</span>
+      <span><svg viewBox="0 0 34 12"><circle cx="9" cy="6" r="4.4" fill="#fff" stroke="#2f5bea" stroke-width="1.2"/><circle cx="24" cy="6" r="5" fill="#e8445a" opacity=".85"/></svg>우리팀 / 상대팀</span>
+    </div>
+  </section>
+
+  <aside class="side glass" aria-label="코칭 노트">
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tab-step" aria-controls="pane-step" aria-selected="true">단계 설명</button>
+      <button role="tab" id="tab-roles" aria-controls="pane-roles" aria-selected="false">포지션 역할</button>
+      <button role="tab" id="tab-notes" aria-controls="pane-notes" aria-selected="false">전술 노트</button>
+    </div>
+    <div class="tab-body" id="pane-step" role="tabpanel" aria-labelledby="tab-step"></div>
+    <div class="tab-body" id="pane-roles" role="tabpanel" aria-labelledby="tab-roles" hidden>
+      <div class="chips" id="chips" role="group" aria-label="포지션 필터"></div>
+      <div class="role-list" id="roleList"></div>
+    </div>
+    <div class="tab-body" id="pane-notes" role="tabpanel" aria-labelledby="tab-notes" hidden></div>
+  </aside>
+</main>
+
+<footer class="wrap"><img class="crest-foot" data-emblem alt="" width="31" height="44"><b>KERYGMA FC</b><br>함께 뛰고, 함께 배우는 팀 · Soli Deo Gloria</footer>
+
+<script>
+'use strict';
+/* 팀 엠블럼 (2.png 배경 제거 · WebP) */
+const EMBLEM = 'data:image/webp;base64,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';
+document.querySelectorAll('[data-emblem]').forEach(img => { img.src = EMBLEM; });
+document.getElementById('favicon').href = EMBLEM;
+
+/* =========================================================
+   1. 포지션 정의 (4-3-3)
+   좌표계: 경기장 105 x 68 (m). x=0 우리 골문 → x=105 상대 골문.
+   y=0 이 우리 팀 왼쪽 터치라인 (공격 방향 기준).
+   ========================================================= */
+const POS = {
+  GK:  {n:1,  ko:'골키퍼', nm:'윤민석',              line:'gk'},
+  LB:  {n:19,  ko:'왼쪽 풀백', nm:'위종욱',            line:'def'},
+  LCB: {n:15,  ko:'왼쪽 센터백', nm:'황지만',          line:'def'},
+  RCB: {n:37,  ko:'오른쪽 센터백', nm:'최수덕',        line:'def'},
+  RB:  {n:14,  ko:'오른쪽 풀백', nm:'박재희',          line:'def'},
+  DM:  {n:5,  ko:'수비형 미드필더', nm:'박광민', line:'mid'},
+  LCM: {n:38,  ko:'왼쪽 미드필더', nm:'최이삭(김학준·12)',  line:'mid'},
+  RCM: {n:9, ko:'오른쪽 미드필더', nm:'김다빈', line:'mid'},
+  LW:  {n:13, ko:'왼쪽 윙어', nm:'박준수',            line:'att'},
+  ST:  {n:7,  ko:'스트라이커', nm:'문찬하',      line:'att'},
+  RW:  {n:88,  ko:'오른쪽 윙어', nm:'이슬기',          line:'att'}
+};
+const ORDER = ['GK','LB','LCB','RCB','RB','DM','LCM','RCM','LW','ST','RW'];
+const OPP = ['o1','o2','o3','o4','o5','o6','o7','o8','o9','o10','o11'];
+const FILTERS = [['all','전체'],['gk','GK'],['def','수비'],['mid','미드'],['att','공격']];
+
+/* =========================================================
+   2. 전술 시나리오 데이터
+   move / opp : 이전 단계 대비 바뀌는 위치
+   ball : 공 이벤트 순서 (pass / through / long / drib / lost)
+   marks: 막힌 패스 길 표시, callouts: 경기장 위 글씨, zones: 강조 영역
+   ========================================================= */
+const BASE = {GK:[4,34],LCB:[13,24],RCB:[13,44],LB:[24,9],RB:[24,59],DM:[26,34],LCM:[38,24],RCM:[38,44],LW:[54,9],ST:[60,34],RW:[54,59]};
+
+const SCN = [
+{
+  id:'lavolpiana', plan:'A', planName:'기본 전개', num:'01', title:'라볼피아나', en:'Salida Lavolpiana', vs:'vs 투톱 압박', level:2,
+  desc:'수비형 미드가 센터백 사이로 내려와 3백을 만드는 빌드업. 상대 공격수 2명보다 항상 1명 많게!',
+  start: BASE,
+  oppStart:{o1:[101,34],o2:[72,12],o3:[70,28],o4:[70,40],o5:[72,56],o6:[48,12],o7:[44,27],o8:[44,41],o9:[48,56],o10:[28,27],o11:[28,41]},
+  roles:{
+    GK:'빌드업의 시작. 공을 잡으면 서두르지 말고 수비형 미드·센터백 중 ‘비어 있는’ 사람에게 짧게 준다. 막히면 Plan B(반대 전환)·Plan C(스트라이커 벽 패스), 그래도 안 되면 롱킥.',
+    LCB:'수비형 미드가 내려오면 페널티박스 왼쪽 모서리 밖까지 넓게 벌린다. 공을 받으면 앞이 비었는지 보고 드리블 전진 또는 풀백·윙어에게 패스.',
+    RCB:'수비형 미드가 내려오면 페널티박스 오른쪽 모서리 밖까지 넓게 벌린다. 반대쪽으로 공이 가면 안으로 좁혀 뒤를 지킨다.',
+    LB:'센터백이 넓게 서니까 너는 하프라인 근처까지 높게, 터치라인에 붙어 윙백처럼. 상대 미드필더를 바깥으로 끌어낸다.',
+    RB:'왼쪽 풀백과 똑같이 높고 넓게. 공이 반대편에 있을 땐 너무 올라가지 말고 균형 유지.',
+    DM:'라볼피아나의 주인공! 두 센터백 사이로 내려와 임시 3백의 가운데가 된다. 공을 받으면 상대가 안 붙은 쪽으로 전환.',
+    LCM:'수비형 미드가 비운 중앙을 메우며 왼쪽 하프스페이스에서 받는다. 상대 미드필더 사이 ‘틈’에 선다.',
+    RCM:'오른쪽 하프스페이스에서 같은 역할. 공이 반대편에 있을 땐 중앙으로 좁혀 균형 유지.',
+    LW:'풀백이 측면을 맡으니 안쪽(하프스페이스)으로 들어와 상대 미드와 수비 ‘사이’에서 받는다.',
+    ST:'상대 센터백을 뒤로 밀어내 공간을 만든다. 윙어가 공을 잡고 돌아서면 수비 뒷공간으로 침투.',
+    RW:'안쪽으로 좁혀 있다가, 공이 반대편에서 전진하면 골문 쪽으로 쇄도.'
+  },
+  notes:{
+    when:'상대가 공격수 2명(투톱)으로 우리 센터백을 압박할 때. 짧은 패스로 침착하게 빌드업하고 싶을 때.',
+    good:['수비형 미드가 내려와 3백 → 상대 공격수 2명보다 1명 많게 (3대2)','센터백은 넓게, 풀백은 높게, 윙어는 안으로','공은 ‘비어 있는 사람’에게. 받기 전에 어깨 너머로 확인(스캔)!'],
+    bad:['수비형 미드가 내려왔는데 양쪽 미드까지 같이 내려와서 앞에 받을 사람이 없음','센터백이 덜 벌어져 3명이 뭉침 → 상대 1명이 2명을 막을 수 있음','GK가 압박받고 있는 선수에게 억지로 패스'],
+    tip:['상대 공격수가 1명이면 수비형 미드가 굳이 내려올 필요 없음 (이미 2대1 우위)','신호 정하기: GK가 공을 잡으면 “수비형 미드 내려!” 콜','막히면 위의 Plan B·C 버튼으로 대안 확인 → 그래도 안 되면 03 롱볼 전개']
+  },
+  steps:[
+    { title:'골킥 준비: 상대는 투톱으로 압박', key:'센터백 2명 vs 상대 공격수 2명 = 수적 우위 없음. 이대로 짧게 주면 바로 뺏긴다.',
+      desc:'골킥(또는 GK가 공을 잡은 상황). 상대는 공격수 2명으로 우리 센터백 두 명을 1대1로 막으려 한다.',
+      roles:{GK:'공을 잡으면 서두르지 말고 앞을 본다. 동료들이 자리 잡을 시간을 준다.',DM:'상대 투톱 사이에 서 있다. 곧 아래로 내려갈 준비.',LCB:'상대 공격수에게 막혀 있는 상태. 아직 패스 받지 말 것.',RCB:'상대 공격수에게 막혀 있는 상태. 아직 패스 받지 말 것.'} },
+    { title:'수비형 미드가 센터백 사이로 내려온다', key:'수비형 미드가 내려오면 뒤에 3명 vs 상대 2명 → 한 명은 항상 비어 있다 (3대2).',
+      desc:'수비형 미드가 두 센터백 사이로 내려와 임시 3백을 만든다. 센터백은 좌우로 크게 벌리고, 풀백은 높이 올라가며, 윙어는 안으로 좁힌다.',
+      move:{DM:[13,34],LCB:[16,11],RCB:[16,57],LB:[40,4],RB:[40,64],LCM:[34,25],RCM:[34,43],LW:[58,20],RW:[58,48],ST:[66,34]},
+      opp:{o10:[24,28],o11:[24,40]},
+      callouts:[{x:13,y:42.2,t:'임시 3백',c:'gold'},{x:24,y:34.7,t:'3 vs 2',c:'gold'}],
+      roles:{DM:'두 센터백 사이, GK 바로 앞(페널티박스 안)으로 내려온다. 몸을 반쯤 열어 양쪽을 다 볼 수 있게.',LCB:'페널티박스 모서리 바깥까지 넓게 벌린다. 터치라인 쪽으로 간다는 느낌.',RCB:'페널티박스 모서리 바깥까지 넓게 벌린다. 터치라인 쪽으로 간다는 느낌.',LB:'센터백이 벌어지면 풀백은 하프라인 근처까지 높게, 터치라인에 붙는다 (윙백처럼).',RB:'센터백이 벌어지면 풀백은 하프라인 근처까지 높게, 터치라인에 붙는다 (윙백처럼).',LW:'풀백이 측면을 맡으니 안쪽 하프스페이스로 들어온다.',RW:'풀백이 측면을 맡으니 안쪽 하프스페이스로 들어온다.',LCM:'조금 내려와 수비형 미드가 비운 중앙을 메운다. 상대 미드필더 사이에서 받을 각도.',RCM:'조금 내려와 수비형 미드가 비운 중앙을 메운다. 상대 미드필더 사이에서 받을 각도.',ST:'상대 센터백을 뒤로 밀어낸다. 라인을 깊게!'} },
+    { title:'GK → 수비형 미드 → 비어 있는 센터백', key:'상대가 수비형 미드를 압박하면 반대로 빈 센터백에게. 공은 항상 ‘사람 없는 쪽’으로.',
+      desc:'GK가 수비형 미드에게 짧게 주면 상대 공격수가 수비형 미드에게 달려든다. 수비형 미드는 원터치로 비어 있는 왼쪽 센터백에게 연결한다.',
+      ball:[{k:'pass',to:'DM'},{k:'pass',to:'LCB'}],
+      move:{LCB:[18,11]}, opp:{o10:[17,30],o11:[21,46]},
+      callouts:[{x:18,y:6,t:'프리!',c:'gold'}],
+      roles:{GK:'수비형 미드에게 짧고 정확하게. 상대 반대쪽 발로 준다.',DM:'받기 전에 어깨 너머로 확인! 압박이 오면 원터치로 비어 있는 센터백에게.',LCB:'상대가 수비형 미드에게 붙는 순간 공 받을 준비. 몸을 앞쪽(상대 골문)으로 열고 받는다.'} },
+    { title:'센터백이 공을 몰고 전진 (드리블)', key:'앞이 비었으면 센터백도 드리블로 전진! 상대 미드필더가 막으러 나오면 그 뒤에 빈자리가 생긴다.',
+      desc:'왼쪽 센터백이 앞 공간으로 공을 몰고 올라간다. 상대 미드필더가 막으러 나오는 순간이 다음 패스 타이밍.',
+      ball:[{k:'drib'}],
+      move:{LCB:[30,13],DM:[14,29],RCB:[18,48],LCM:[36,27],LB:[44,4]},
+      opp:{o6:[40,12],o10:[22,30],o11:[24,42],o7:[42,24]},
+      callouts:[{x:47,y:18,t:'상대가 나오면 뒤가 빈다',c:'cyan'}],
+      roles:{LCB:'앞이 비었으면 패스 말고 직접 몰고 올라간다. 상대가 막으러 나올 때까지!',DM:'센터백이 올라간 자리를 커버. 중앙에 남아 뒤를 지킨다.',RCB:'안쪽으로 조금 좁혀 수비형 미드와 둘이서 뒤를 지킨다.',LB:'계속 높고 넓게. 상대 미드필더를 바깥에 붙잡아 둔다.'} },
+    { title:'풀백 거쳐 선과 선 사이의 윙어에게', key:'상대 미드필더 라인과 수비 라인 ‘사이’가 황금 공간. 윙어는 그 사이에서 몸을 반쯤 돌려 받는다.',
+      desc:'상대 미드필더가 센터백에게 나오자 센터백은 풀백에게, 풀백은 빠르게 안쪽 하프스페이스의 윙어에게 연결한다.',
+      ball:[{k:'pass',to:'LB'},{k:'pass',to:'LW'}],
+      move:{LB:[46,5],LW:[56,21]}, opp:{o6:[42,9],o2:[68,11],o7:[44,24]},
+      zones:[{x:48,y:14,w:17,h:16,c:'cyan',label:'선과 선 사이'}],
+      roles:{LB:'공을 받으면 바로 안쪽 윙어에게. 상대가 붙기 전에 원터치·투터치로.',LW:'상대 미드 뒤, 수비 앞. 등지지 말고 몸을 반쯤 열어 골대 방향을 보며 받는다.',LCM:'윙어 근처에서 지원. 공이 막히면 다시 받아줄 수 있는 각도.',LCB:'패스 후 제자리 멈춤 금지. 다시 받을 수 있게 뒤를 받쳐준다.'} },
+    { title:'스트라이커 침투 → 마무리', key:'공이 전진하면 모두 함께 올라간다. 뒤에는 센터백 2명 + 수비형 미드가 남아 역습 대비.',
+      desc:'윙어가 돌아서는 순간 스트라이커가 수비 뒷공간으로 대각선 침투, 윙어가 찔러준다. 반대편 윙어와 오른쪽 미드는 박스로 쇄도.',
+      ball:[{k:'through',to:'ST'}],
+      move:{LW:[60,21],ST:[86,30],RW:[80,44],RCM:[66,40],LCM:[54,26],LB:[56,6],DM:[30,32],LCB:[34,16],RCB:[30,46],RB:[50,62]},
+      opp:{o2:[72,14],o3:[80,26],o4:[78,38],o5:[76,54],o6:[50,10],o7:[50,31],o8:[52,40],o9:[58,56],o10:[38,30],o11:[40,44]},
+      callouts:[{x:87,y:25.6,t:'침투!',c:'lime'}],
+      roles:{ST:'윙어가 공을 잡고 돌아서는 순간 수비 뒷공간으로 대각선 침투.',LW:'돌아서자마자 스트라이커의 침투 앞 공간으로 찔러준다.',RW:'반대편에서 골문 쪽으로 쇄도. 크로스·리바운드 대비.',RCM:'페널티박스 근처로 올라가 컷백(뒤로 내주는 패스) 받을 준비.',DM:'하프라인 근처까지 올라가되 중앙 지킴이 역할은 유지.',LCB:'라인을 올린다. 역습 대비로 센터백 2명은 뒤에 남는다.',RCB:'라인을 올린다. 역습 대비로 센터백 2명은 뒤에 남는다.'} }
+  ]
+},
+{
+  id:'lavol-b', parent:'lavolpiana', plan:'B', planName:'반대 전환', startFrom:2,
+  trigger:'Plan A 진행 중, 상대가 공 쪽(왼쪽)으로 몰려와 센터백의 앞·옆 패스 길이 다 막혔을 때.',
+  notes:{
+    when:'Plan A 진행 중 상대가 공 쪽(왼쪽)으로 몰려 앞·옆 패스 길이 다 막혔을 때.',
+    good:['막힌 쪽을 억지로 뚫지 않는다 — 공을 반대편으로','수비형 미드는 연결 고리: 원터치로 빠르게 넘긴다','반대편 센터백·풀백은 미리 넓게 벌리고 “여기 비었어!” 콜'],
+    bad:['막혔는데 계속 같은 쪽으로 드리블하다 뺏김','반대편 선수들이 쉬고 있다가 공이 와도 받을 준비가 안 됨','수비형 미드가 2~3번 터치하는 사이 상대가 다시 따라옴'],
+    tip:['연습: 한쪽이 막히면 반대쪽 미니골대로 — 전환 게임','콜 사인: “바꿔!”','반대편도 막히면 → Plan C (스트라이커 벽 패스)']
+  },
+  steps:[
+    { title:'왼쪽이 막혔다', key:'상대가 공 쪽으로 몰렸다 = 반대쪽이 비었다. 막힌 쪽을 억지로 뚫지 말고 방향을 바꾼다.',
+      desc:'왼쪽 센터백이 공을 받았지만 상대가 풀백·왼쪽 미드·윙어 쪽 길을 모두 막고 들어왔다. 대신 오른쪽은 텅 비어 있다.',
+      opp:{o6:[26,9],o7:[38,21],o2:[62,16],o10:[16,27],o11:[22,44],o3:[66,28],o8:[44,38]},
+      marks:[{from:'LCB',to:'LB'},{from:'LCB',to:'LCM'}],
+      callouts:[{x:30,y:61,t:'반대편은 비었다',c:'cyan'}],
+      roles:{LCB:'앞·옆이 다 막혔다. 억지로 뚫지 말고 고개를 들어 반대편 확인.',DM:'센터백이 막히면 바로 받아줄 수 있게 각도를 만든다 (“수비형 미드 여기!”).',RCB:'반대편에서 넓게 벌린 채 “여기 비었어!” 콜.',RB:'높고 넓게 유지. 공이 넘어오면 받을 준비.'} },
+    { title:'수비형 미드 거쳐 반대편 센터백으로 (전환)', key:'방향 전환은 빠를수록 좋다. 짧은 패스 2번으로 경기장 반대편까지!',
+      desc:'왼쪽 센터백 → 수비형 미드 → 오른쪽 센터백. 수비형 미드는 원터치로 바로 넘긴다. 공이 빨리 움직이면 상대가 다 따라오지 못한다.',
+      ball:[{k:'pass',to:'DM'},{k:'pass',to:'RCB'}],
+      move:{DM:[12,35],RCB:[18,56],RB:[44,64]}, opp:{o10:[17,31],o11:[24,50],o6:[24,13]},
+      roles:{DM:'받기 전에 반대편 센터백 위치를 미리 확인. 원터치로 넘긴다.',RCB:'받을 때 몸을 앞으로 열어 첫 터치를 앞 공간으로.',LCB:'패스 후 안쪽으로 좁혀 뒤를 지킨다.',RB:'더 높이 올라가 다음 패스 받을 준비.'} },
+    { title:'센터백 전진 → 높이 선 오른쪽 풀백', key:'앞이 비었으면 센터백이 몰고 전진 → 상대가 막으러 나오면 그때 풀백에게.',
+      desc:'오른쪽 센터백이 빈 공간으로 드리블해 올라간다. 상대가 막으러 나오는 순간 높이 서 있던 오른쪽 풀백에게 연결.',
+      ball:[{k:'drib'},{k:'pass',to:'RB'}],
+      move:{RCB:[28,56],RB:[46,64],RCM:[40,47],RW:[58,46]}, opp:{o9:[38,56],o11:[26,46],o5:[66,58]},
+      roles:{RCB:'앞 공간으로 드리블. 상대 미드가 막으러 나오면 바로 풀백에게.',RB:'터치라인에 붙어 높게. 받을 땐 앞을 본다.',RCM:'오른쪽 하프스페이스로 이동해 다음 패스 받을 준비.',RW:'상대 미드와 수비 사이로 들어온다.'} },
+    { title:'3자 패스: 풀백 → 오른쪽 미드 → 윙어', key:'오른쪽 미드가 원터치로 연결하면 상대 미드필더 두 명이 한 번에 벗겨진다.',
+      desc:'오른쪽 풀백이 오른쪽 미드에게 짧게, 오른쪽 미드는 원터치로 선과 선 사이에 있는 오른쪽 윙어에게.',
+      ball:[{k:'pass',to:'RCM'},{k:'pass',to:'RW'}],
+      move:{RCM:[44,49],RW:[60,44],RB:[48,64]}, opp:{o9:[44,60],o8:[46,40]},
+      roles:{RB:'오른쪽 미드에게 짧게. 패스 후 앞으로 올라가 지원.',RCM:'받기 전에 윙어 위치 확인 → 원터치.',RW:'상대 미드와 수비 사이에서 몸을 반쯤 열고 받는다.'} },
+    { title:'윙어 돌아서 → 스트라이커 침투', key:'반대편으로 넘어오면 공간이 넓다. 윙어가 돌아서는 순간 스트라이커가 대각선 침투.',
+      desc:'오른쪽 윙어가 돌아서자마자 스트라이커가 상대 센터백 사이로 침투, 윙어가 찔러준다. 팀 전체가 함께 올라간다.',
+      ball:[{k:'through',to:'ST'}],
+      move:{ST:[86,36],RW:[62,45],LW:[80,24],LCM:[60,30],RB:[56,62],LCB:[32,18],RCB:[34,50],DM:[30,34],RCM:[54,48],LB:[54,6]},
+      opp:{o3:[80,30],o4:[80,42],o2:[72,16],o5:[76,56],o6:[44,14],o7:[50,26],o8:[52,40],o9:[48,58],o10:[36,30],o11:[40,46]},
+      callouts:[{x:88,y:31,t:'침투!',c:'lime'}],
+      roles:{ST:'윙어가 돌아서는 순간 상대 센터백 사이로 대각선 침투.',RW:'돌아서서 스트라이커 앞 공간으로 스루패스.',LW:'반대편에서 파포스트로 쇄도.',DM:'뒤에 남아 역습 대비.'} }
+  ]
+},
+{
+  id:'lavol-c', parent:'lavolpiana', plan:'C', planName:'스트라이커 벽 패스', startFrom:1,
+  trigger:'Plan A·B 모두 막힐 때: 상대가 우리 수비·미드 한 명 한 명에게 붙으며 전원 앞으로 나왔을 때.',
+  notes:{
+    when:'Plan A·B 모두 막혔을 때 — 상대가 우리 선수마다 붙으며 전원 앞으로 나왔을 때.',
+    good:['상대가 앞으로 나올수록 그 뒤(미드필더 뒤)가 빈다','스트라이커는 내려와 등지고 받고, 앞을 보고 있는 왼쪽 미드에게 원터치 (벽 패스)','패스는 바닥으로 강하게 — 띄우면 상대가 시간을 번다'],
+    bad:['스트라이커가 받고 혼자 돌아서려다 뺏김','왼쪽 미드가 스트라이커와 너무 붙어 있음 (5~8m 간격이 적당)','센터백이 느리게 띄워 줘서 상대가 가로챔'],
+    tip:['연습: 3인 벽 패스 드릴 (A→B→C) 반복','스트라이커의 첫 터치는 “내주기” — 돌아서기는 고급 기술','이것도 막히면 마지막 카드 → 03 롱볼 전개']
+  },
+  steps:[
+    { title:'양쪽 다 막혔다: 상대가 전원 앞으로', key:'상대가 전원 앞으로 나왔다 = 상대 미드필더 뒤가 텅 비었다. 그 빈 곳이 Plan C의 목표.',
+      desc:'상대가 우리 수비·미드 한 명 한 명에게 붙으며 높이 올라왔다. 짧은 길은 막혔지만 상대 미드필더와 수비 사이가 크게 벌어졌다.',
+      opp:{o10:[18,29],o11:[22,47],o6:[26,10],o9:[26,56],o7:[38,21],o8:[38,47],o2:[48,6],o5:[48,62],o3:[58,28],o4:[58,40]},
+      marks:[{from:'GK',to:'DM'},{from:'GK',to:'RCB'}],
+      zones:[{x:41,y:18,w:14,h:32,c:'cyan',label:'빈 공간'}],
+      roles:{GK:'짧은 길 대부분이 막혔다. 가장 여유 있는 센터백을 찾는다.',ST:'상대 미드필더 뒤 빈 공간을 확인. 곧 내려올 준비.',LCM:'상대 미드에게 붙어 있지만 스트라이커 옆으로 움직일 준비.',LCB:'그나마 여유 있는 쪽. GK 패스 받을 준비.'} },
+    { title:'스트라이커가 내려와 등지고 받는다', key:'스트라이커는 등지고 받아도 OK — 돌아설 필요 없다. 내려와서 받고, 바로 옆에 내준다.',
+      desc:'GK → 왼쪽 센터백 → 빈 공간으로 내려온 스트라이커에게 바닥으로 강하게 패스.',
+      ball:[{k:'pass',to:'LCB'},{k:'pass',to:'ST'}],
+      move:{ST:[47,32],LCB:[18,12]}, opp:{o6:[23,13],o3:[54,30]},
+      roles:{LCB:'상대가 붙기 전에 스트라이커 발밑으로 강하고 낮게 (바닥 패스).',ST:'상대 미드 뒤 빈 공간으로 내려와 등지고 받는다. 상대 센터백이 따라오면 몸으로 버틴다.',LCM:'스트라이커가 받는 순간 스트라이커 옆·앞쪽으로 이동.'} },
+    { title:'벽 패스: 스트라이커 → 앞을 보는 왼쪽 미드', key:'스트라이커가 원터치로 내주면 왼쪽 미드는 이미 앞을 보고 있다. 상대 미드필더 전부가 한 번에 벗겨진다 (3자 패스).',
+      desc:'스트라이커가 원터치로 옆에 온 왼쪽 미드에게 내준다. 왼쪽 미드는 앞을 보며 받는다.',
+      ball:[{k:'pass',to:'LCM'}],
+      move:{LCM:[39,25]}, opp:{o7:[34,20]},
+      callouts:[{x:44,y:21,t:'벽 패스!',c:'gold'}],
+      roles:{ST:'원터치로 왼쪽 미드 발 앞에 내준다. 그리고 바로 돌아서 앞으로.',LCM:'몸을 앞으로 연 채 받는다. 받자마자 앞을 본다.',LW:'왼쪽 미드가 받는 순간이 출발 신호!'} },
+    { title:'왼쪽 미드 → 윙어 뒷공간 침투', key:'상대 수비 라인이 높이 올라와 있어서 뒤가 넓다. 윙어는 대각선으로 뛰고, 왼쪽 미드는 그 앞 공간에 찔러준다.',
+      desc:'왼쪽 미드가 고개를 들자마자 왼쪽 윙어가 상대 풀백 뒤로 대각선 질주, 왼쪽 미드가 스루패스.',
+      ball:[{k:'through',to:'LW'}],
+      move:{LW:[74,14],ST:[62,36],RW:[70,48],LCM:[46,27]}, opp:{o3:[60,28],o2:[54,10],o4:[62,42]},
+      callouts:[{x:76,y:9.5,t:'뒷공간!',c:'lime'}],
+      roles:{LCM:'고개 들고 윙어 앞 공간에 스루패스.',LW:'상대 풀백 뒤로 대각선 질주.',ST:'돌아서서 박스 쪽으로 따라 뛴다.',RW:'반대편에서 박스로 쇄도.'} },
+    { title:'박스 침투 → 마무리', key:'빠르게 박스로! 스트라이커는 니어, 반대 윙어는 파포스트. 이것도 막히면 → 03 롱볼 전개.',
+      desc:'왼쪽 윙어가 박스 안까지 몰고 들어가 낮은 컷백. 스트라이커가 니어포스트에서 마무리.',
+      ball:[{k:'drib'},{k:'pass',to:'ST'}],
+      move:{LW:[88,24],ST:[89,35],RW:[86,46],LCM:[72,30],LB:[56,6],LCB:[30,18],RCB:[30,50],DM:[34,34],RCM:[60,44]},
+      opp:{o3:[82,30],o4:[84,42],o2:[80,16],o7:[50,24],o8:[50,44],o10:[40,30],o11:[42,46],o6:[38,14],o9:[40,58],o5:[62,58]},
+      callouts:[{x:92,y:30.5,t:'슛!',c:'lime'}],
+      roles:{LW:'박스 안으로 몰고 들어가 스트라이커에게 낮게 컷백.',ST:'니어포스트로 쇄도해 마무리.',RW:'파포스트로 쇄도.',LCM:'박스 앞에서 흘러나오는 공 대기.'} }
+  ]
+},
+{
+  id:'inverted', plan:'A', planName:'기본 전개', num:'02', title:'인버티드 풀백', en:'Inverted Full-back · 3-2', vs:'vs 스리톱 압박', level:3,
+  desc:'풀백이 중앙으로 들어와 3-2 구조 완성. 3자 패스로 압박을 벗기고 넓게 선 윙어로 전환.',
+  start:{GK:[4,34],LCB:[13,24],RCB:[13,44],LB:[24,9],RB:[24,59],DM:[28,34],LCM:[40,24],RCM:[40,44],LW:[55,9],ST:[60,34],RW:[55,59]},
+  oppStart:{o1:[101,34],o2:[72,12],o3:[70,28],o4:[70,40],o5:[72,56],o6:[50,20],o7:[48,34],o8:[50,48],o9:[34,14],o10:[32,30],o11:[34,54]},
+  roles:{
+    GK:'센터백에게 짧게 주고, 다시 받을 수 있는 각도로 움직인다. 3백 뒤의 마지막 안전장치.',
+    LCB:'3백의 왼쪽. 안으로 들어온 왼쪽 풀백에게 가는 패스 길을 찾는다.',
+    RCB:'3백의 가운데. 좌우 전환의 중심. 공을 잃으면 가장 먼저 중앙을 막는다.',
+    LB:'인버티드 풀백! 공격 시 터치라인을 떠나 수비형 미드 옆에 중앙 미드필더처럼 선다. 원터치로 왼쪽 미드에게 연결하는 3자 패스의 중심.',
+    RB:'아래에 남아 3백의 오른쪽(세 번째 센터백)이 된다. 오버래핑 금지 — 역습 방어 담당.',
+    DM:'인버티드 풀백과 나란히 ‘2’를 만든다. 둘이 약 10m 간격으로 서서 상대 공격수 뒤에서 받는다.',
+    LCM:'한 칸 높은 왼쪽 하프스페이스. 인버티드 풀백의 원터치 패스를 받는 ‘세 번째 선수’.',
+    RCM:'오른쪽 하프스페이스. 반대 전환의 연결고리.',
+    LW:'풀백이 안으로 갔으니 폭은 네 책임. 터치라인을 밟고 높게 서서 1대1 기회를 기다린다.',
+    ST:'상대 센터백 둘을 붙잡아 둔다. 윙어가 1대1 할 때 수비가 도우러 못 가게.',
+    RW:'반대편 폭 담당. 공이 왼쪽에 있으면 파포스트(먼 쪽 골대) 침투 준비.'
+  },
+  notes:{
+    when:'상대가 공격수 3명으로 압박할 때 / 공을 오래 소유하고 싶을 때 / 상대 역습이 무서울 때.',
+    good:['한쪽 풀백은 안으로(미드필더처럼), 반대쪽 풀백은 뒤에 남아 3백','풀백이 비운 측면은 윙어가 터치라인에 붙어서 책임','3자 패스: 공 받기 전에 ‘다음 사람’을 미리 본다'],
+    bad:['풀백이 안으로 들어왔는데 윙어도 안으로 들어와 측면이 텅 빔','양쪽 풀백이 다 올라가 뒤에 2명만 남음 → 역습 한 방','인버티드 풀백이 상대 골문을 등진 채 받다가 뺏김'],
+    tip:['안으로 들어가는 풀백 = 패스 좋은 선수, 남는 풀백 = 수비 좋은 선수','“안으로!” 콜 신호를 미리 정해두기','처음엔 한쪽(왼쪽)만 연습하고 익숙해지면 반대쪽도','막히면 위의 Plan B(윙어 내려오기)·Plan C(GK 거쳐 반대 전환) 버튼으로 대안 확인']
+  },
+  steps:[
+    { title:'골킥 준비: 상대는 앞에 3명', key:'상대가 앞에 3명을 세웠다. 우리도 뒤에 최소 3명이 필요하다. 그 세 번째를 ‘풀백’으로 만든다.',
+      desc:'상대는 4-3-3으로 공격수 3명이 우리 수비를 압박하려 한다. 평소 4백 그대로면 패스 길이 금방 막힌다.',
+      callouts:[{x:32,y:24.6,t:'상대 공격 3명',c:'red'}],
+      roles:{GK:'공을 잡으면 서두르지 말고 동료가 3-2 구조를 만들 시간을 준다.',LB:'곧 안으로 들어갈 준비. 상대 윙어 위치를 확인.'} },
+    { title:'왼쪽 풀백이 안으로! 3-2 만들기', key:'왼쪽 풀백이 중앙으로 들어와 수비형 미드 옆에 선다. 뒤에 3명(센터백 2 + 오른쪽 풀백), 그 앞에 2명 = 3-2.',
+      desc:'왼쪽 풀백이 터치라인을 떠나 중앙으로 들어온다. 오른쪽 풀백은 아래에 남아 3백을 만들고, 양쪽 윙어는 터치라인에 붙어 폭을 책임진다.',
+      move:{LB:[30,25],DM:[30,41],LCB:[14,17],RCB:[12,38],RB:[17,57],LW:[60,3],RW:[64,64],LCM:[48,22],RCM:[48,46],ST:[68,34]},
+      opp:{o9:[24,16],o10:[22,34],o11:[26,54],o6:[53,27],o8:[54,42]},
+      zones:[{x:25,y:20,w:10,h:27,c:'gold',label:'‘2’ (수비형 미드 2명)'}],
+      callouts:[{x:8,y:28,t:'3백',c:'gold'},{x:60,y:10.2,t:'폭 담당',c:'cyan'},{x:64,y:59.4,t:'폭 담당',c:'cyan'}],
+      roles:{LB:'공격 시작 신호가 오면 터치라인에서 ‘안쪽으로’ 들어와 수비형 미드 옆에 선다. 이제 너는 미드필더!',RB:'아래에 남아 세 번째 센터백이 된다. 너무 높이 올라가지 말 것.',LCB:'왼쪽으로 조금 벌려 3백의 왼쪽을 맡는다.',RCB:'가운데로 이동해 3백의 중앙을 맡는다.',LW:'풀백이 안으로 들어갔으니 터치라인에 발을 붙이고 높게 선다. 폭은 네 책임!',RW:'반대쪽 폭을 책임. 터치라인에 붙는다.',LCM:'한 칸 높이 올라가 상대 미드필더를 뒤로 밀어낸다 (하프스페이스).',RCM:'한 칸 높이 올라가 상대 미드필더를 뒤로 밀어낸다 (하프스페이스).',DM:'인버티드 풀백과 나란히. 둘 사이 간격 약 10m 유지.'} },
+    { title:'GK → 왼쪽 센터백', key:'GK는 압박이 덜한 쪽 센터백에게. 상대 공격수가 달려오면 그게 다음 패스 신호.',
+      desc:'GK가 왼쪽 센터백에게 짧게 준다. 상대 공격수가 센터백에게, 상대 미드필더가 인버티드 풀백에게 붙으러 나온다.',
+      ball:[{k:'pass',to:'LCB'}],
+      opp:{o9:[19,13],o6:[38,24]},
+      roles:{GK:'센터백에게 짧게. 그 후 뒤에서 다시 받을 수 있는 각도로 이동.',LCB:'받기 전에 앞을 확인: 안으로 들어온 풀백이 비었는지 본다.',LB:'상대 미드가 붙는지 확인. 센터백 쪽으로 몸을 열고 받을 준비.'} },
+    { title:'3자 패스: 센터백 → 인버티드 풀백 → 왼쪽 미드', key:'A가 B에게, B가 원터치로 C에게. 상대는 B를 압박하러 왔는데 공은 이미 C에게 가 있다.',
+      desc:'센터백이 인버티드 풀백에게 주고, 풀백은 원터치로 하프스페이스의 왼쪽 미드에게 연결한다. 압박하러 온 상대 둘이 한 번에 벗겨진다.',
+      ball:[{k:'pass',to:'LB'},{k:'pass',to:'LCM'}],
+      move:{LCM:[45,18],LB:[31,26]}, opp:{o6:[35,22],o9:[18,12]},
+      callouts:[{x:31,y:21.2,t:'원터치!',c:'gold'}],
+      roles:{LB:'받기 전에 왼쪽 미드 위치를 미리 본다. 상대가 붙으면 원터치로 왼쪽 미드에게 내준다.',LCM:'인버티드 풀백이 공을 받는 순간 ‘보이는 각도’로 이동. 상대 미드 뒤쪽.',LCB:'패스 후 멈추지 말고 다시 받을 수 있는 위치로.'} },
+    { title:'왼쪽 미드 → 넓게 선 윙어 (1대1 만들기)', key:'윙어가 넓게 서 있었기 때문에 상대 풀백과 1대1. 공간이 넓어 돌파가 쉽다.',
+      desc:'왼쪽 미드가 돌아서서 터치라인에 붙어 있는 왼쪽 윙어에게 연결. 팀 전체는 3-2 구조를 유지한 채 함께 올라간다.',
+      ball:[{k:'pass',to:'LW'}],
+      move:{LW:[64,4],LCM:[48,18],ST:[73,34],LCB:[26,18],RCB:[24,36],RB:[28,54],DM:[36,40],LB:[38,26]},
+      opp:{o2:[68,10],o6:[42,20],o9:[22,14],o10:[30,32],o11:[32,49],o7:[50,32],o8:[54,46],o3:[76,28],o4:[76,40],o5:[74,56]},
+      callouts:[{x:72,y:16,t:'1대1 찬스',c:'lime'}],
+      roles:{LW:'공 받기 전 상대 풀백 위치 체크. 첫 터치를 앞(골문 쪽)으로!',ST:'상대 센터백을 붙잡아 풀백을 도와주지 못하게.',LB:'패스 후에도 안쪽에 머무른다. 이게 역습 방어의 핵심.',RB:'3백 위치 그대로 함께 올라간다. 오버래핑 금지.'} },
+    { title:'공을 잃었을 때: 3-2가 역습을 막는다', key:'인버티드 풀백 덕분에 공을 잃어도 중앙에 5명(3+2)이 이미 서 있다. 상대가 중앙으로 못 달린다.',
+      desc:'윙어가 공을 뺏겼다. 상대가 중앙으로 빠르게 역습하려 하지만 3-2 구조가 중앙 길을 이미 막고 있다. 윙어는 즉시 압박.',
+      ball:[{k:'lost',to:'o2'},{k:'lost',to:'o7'}],
+      move:{LB:[44,28],DM:[44,38],LCB:[32,24],RCB:[30,38],RB:[34,52],LW:[66,8],LCM:[52,22],ST:[70,32]},
+      opp:{o2:[68,13],o7:[56,30],o10:[38,33],o9:[34,16],o11:[39,57]},
+      zones:[{x:27,y:21,w:21,h:34,c:'gold',label:'역습 차단벽 (3+2)'}],
+      roles:{LB:'공을 잃으면 바로 앞 선수 압박 또는 중앙 패스 길 차단.',DM:'상대 공격수에게 가는 패스 길을 몸으로 막는다.',LCB:'무조건 물러나지 말고 간격 유지. 상대 공격수 앞을 막는다.',RCB:'무조건 물러나지 말고 간격 유지. 상대 공격수 앞을 막는다.',RB:'3백의 오른쪽 그대로. 측면 역습 커버.',LW:'공 뺏긴 즉시 5초 압박! 다시 뺏는다.'} }
+  ]
+},
+{
+  id:'inv-b', parent:'inverted', plan:'B', planName:'윙어 내려오기', startFrom:2,
+  trigger:'Plan A 진행 중, 상대 미드필더가 인버티드 풀백과 수비형 미드(‘2’)에 1대1로 붙어 중앙 길이 막혔을 때.',
+  notes:{
+    when:'Plan A 중, 상대 미드필더가 인버티드 풀백과 수비형 미드를 1대1로 따라붙어 중앙 길이 막혔을 때.',
+    good:['상대가 안으로 따라 들어오면 바깥이 빈다 — 측면으로 우회','윙어는 터치라인 따라 내려와 받고, 원터치로 내준다','왼쪽 미드는 상대 풀백 뒤로 대각선 침투 (3자 패스)'],
+    bad:['윙어가 내려와 받고 등진 채 오래 끌다 뺏김','왼쪽 미드가 침투 타이밍을 놓쳐 늦거나 오프사이드','인버티드 풀백까지 바깥으로 나가 3-2 구조가 무너짐'],
+    tip:['콜 사인: 윙어에게 “내려와!”','윙어-왼쪽 미드 2인 연습: 내려와 받기 → 원터치 → 침투 반복','이것도 막히면 → Plan C (GK 거쳐 반대 전환)']
+  },
+  steps:[
+    { title:'중앙이 막혔다: 상대가 ‘2’에 1대1', key:'상대가 우리 ‘2’(인버티드 풀백 + 수비형 미드)에 붙었다 = 그 상대들이 원래 자리를 비웠다. 바깥으로 돌아간다.',
+      desc:'왼쪽 센터백이 공을 받았지만 상대 미드필더들이 인버티드 풀백과 수비형 미드를 바짝 따라붙었다. 대신 왼쪽 측면이 텅 비었다.',
+      opp:{o6:[35,22],o7:[36,38],o8:[54,48],o2:[64,8],o9:[20,21]},
+      marks:[{from:'LCB',to:'LB'},{from:'LCB',to:'LCM'}],
+      zones:[{x:30,y:0,w:26,h:12,c:'cyan',label:'빈 측면'}],
+      roles:{LCB:'가운데가 막혔다. 고개를 들어 측면 확인.',LB:'상대를 달고 안쪽에 머문다. 네가 상대를 끌고 있어서 바깥이 빈 거다.',DM:'상대를 달고 중앙 유지.',LW:'측면이 비었다 — 내려올 준비.',LCM:'상대 풀백 뒤 공간을 확인.'} },
+    { title:'윙어가 내려와 받는다', key:'윙어가 터치라인 따라 내려오면 상대 풀백은 따라오기 애매하다. 센터백 → 윙어로 바깥 길 연결.',
+      desc:'왼쪽 윙어가 터치라인을 따라 빈 측면으로 내려오고, 센터백이 바로 연결한다.',
+      ball:[{k:'pass',to:'LW'}],
+      move:{LW:[42,6]},
+      roles:{LW:'터치라인 따라 내려와 받는다. 받기 전에 왼쪽 미드 위치 확인!',LCB:'윙어 발밑으로 강하고 낮게.',LCM:'윙어가 받는 순간 출발 준비.'} },
+    { title:'3자 패스: 윙어 원터치 → 왼쪽 미드 침투', key:'윙어가 상대 풀백을 끌어내면 그 뒤가 빈다. 왼쪽 미드가 대각선으로 뛰어 들어가 받는다 (센터백 → 윙어 → 왼쪽 미드).',
+      desc:'상대 풀백이 윙어에게 따라 나오는 순간, 왼쪽 미드가 그 뒤 공간으로 대각선 침투. 윙어가 원터치로 찔러준다.',
+      ball:[{k:'through',to:'LCM'}],
+      move:{LCM:[64,9]}, opp:{o2:[45,12]},
+      callouts:[{x:64,y:4,t:'침투!',c:'lime'}],
+      roles:{LW:'원터치로 왼쪽 미드가 달려가는 앞 공간에.',LCM:'상대 풀백이 윙어에게 나오는 순간 그 뒤로 대각선 질주.',LB:'안쪽 그대로 — 3-2 구조 유지.'} },
+    { title:'측면 돌파 → 박스 채우기', key:'측면을 돌파하면 스트라이커·반대 윙어·오른쪽 미드가 박스를 채운다. 뒤에는 3-2 구조 그대로 유지!',
+      desc:'왼쪽 미드가 측면을 따라 몰고 들어가 낮게 컷백. 스트라이커가 마무리, 반대편 윙어와 오른쪽 미드는 박스로 쇄도. 팀 전체가 3-2를 유지하며 올라간다.',
+      ball:[{k:'drib'},{k:'pass',to:'ST'}],
+      move:{LCM:[84,12],ST:[88,31],RW:[84,48],RCM:[74,36],LW:[56,8],LB:[44,26],DM:[44,40],LCB:[30,22],RCB:[28,38],RB:[32,54]},
+      opp:{o2:[76,10],o3:[84,26],o4:[84,40],o5:[80,54],o6:[50,20],o7:[50,34],o8:[58,44],o9:[36,18],o10:[40,32],o11:[40,50]},
+      callouts:[{x:91,y:26.8,t:'슛!',c:'lime'}],
+      roles:{LCM:'박스 근처까지 몰고 가서 낮고 빠르게 컷백.',ST:'니어포스트로 쇄도.',RW:'파포스트로 쇄도.',RCM:'박스 앞에서 흘러나오는 공 대기.',LB:'안쪽에서 역습 대비 (3-2의 ‘2’).',DM:'안쪽에서 역습 대비 (3-2의 ‘2’).'} }
+  ]
+},
+{
+  id:'inv-c', parent:'inverted', plan:'C', planName:'GK 거쳐 반대 전환', startFrom:2,
+  trigger:'Plan A·B 모두 막힐 때: 상대가 우리 왼쪽(공 쪽)에 사람을 몰아 측면·중앙이 다 막혔을 때.',
+  notes:{
+    when:'Plan A·B 모두 막혔을 때 — 상대가 공 쪽(왼쪽)에 사람을 몰아 측면과 중앙이 다 막혔을 때.',
+    good:['GK는 11번째 필드 플레이어 — 백패스는 후퇴가 아니라 방향 전환','공이 반대편으로 가는 동안 오른쪽 윙어는 터치라인에 붙어 1대1 준비','전환 후에도 인버티드 풀백은 안쪽 — 3-2 구조 유지'],
+    bad:['GK가 공을 오래 끌다 상대 공격수에게 압박당함','반대편 풀백이 너무 올라가 있어 GK 패스 각도가 안 나옴','오른쪽 윙어가 안으로 좁혀 있어 넓은 공간을 못 씀'],
+    tip:['GK 연습: 첫 터치를 패스할 방향으로 → 바로 패스','콜 사인: “골키퍼!” (백패스 신호)','이것도 막히면 마지막 카드 → 03 롱볼 전개']
+  },
+  steps:[
+    { title:'왼쪽 전체가 막혔다', key:'왼쪽·가운데가 다 막히면, 우리에겐 11번째 필드 플레이어 GK가 있다. 뒤로 돌려서 반대편으로!',
+      desc:'상대가 공 쪽(왼쪽)으로 몰려와 풀백·윙어·가운데 길을 모두 막았다. 그 대신 오른쪽은 텅 비어 있다.',
+      opp:{o6:[35,22],o2:[56,6],o10:[19,29],o7:[38,34],o8:[54,44],o11:[30,52]},
+      marks:[{from:'LCB',to:'LB'},{from:'LCB',to:'RCB'}],
+      callouts:[{x:40,y:66.2,t:'오른쪽은 비었다',c:'cyan'}],
+      roles:{LCB:'앞·옆·가운데가 다 막혔다. 무리하지 말고 GK를 본다.',GK:'센터백 뒤 대각선으로 서서 “골키퍼!” 콜. 백패스 받을 준비.',RCB:'넓게 벌려 GK의 패스 각도를 만든다.',RW:'터치라인에 붙어 넓게. 곧 공이 온다.'} },
+    { title:'GK에게 백패스 → 반대편 센터백', key:'GK에게 돌리는 건 후퇴가 아니라 ‘방향 전환’. GK는 원터치·투터치로 빠르게 반대편에.',
+      desc:'왼쪽 센터백이 GK에게 돌리고, GK는 바로 넓게 벌린 오른쪽 센터백에게 연결한다.',
+      ball:[{k:'pass',to:'GK'},{k:'pass',to:'RCB'}],
+      move:{GK:[6,32],RCB:[14,44],RB:[22,60]}, opp:{o9:[19,24],o10:[22,34],o11:[28,52]},
+      roles:{GK:'받기 전에 오른쪽 센터백 위치 확인. 첫 터치를 오른쪽으로 → 바로 패스.',LCB:'GK에게 안전하게. 패스 후 안쪽으로 좁힌다.',RCB:'넓게 벌린 채 받는다. 첫 터치는 앞으로.',RB:'측면으로 벌려 다음 패스 길을 만든다.'} },
+    { title:'오른쪽 풀백 거쳐 넓게 선 윙어에게', key:'상대가 왼쪽에 몰려 있어서 오른쪽 윙어는 상대 풀백과 1대1. 라인 따라 길게 보내도 된다.',
+      desc:'오른쪽 센터백 → 오른쪽 풀백 → 터치라인에 붙어 있던 오른쪽 윙어에게 길게. 오른쪽 풀백은 패스 후 다시 3백 자리로.',
+      ball:[{k:'pass',to:'RB'},{k:'long',to:'RW'}],
+      move:{RB:[24,60],RW:[62,62],RCM:[52,50],ST:[72,36]}, opp:{o11:[30,54]},
+      roles:{RB:'받자마자 라인 따라 윙어에게 길게. 오버래핑 말고 다시 3백 자리로.',RW:'터치라인에 붙어 받는다. 첫 터치를 앞으로!',RCM:'윙어 근처로 이동해 지원.',ST:'상대 센터백을 붙잡아 윙어 1대1을 만든다.'} },
+    { title:'윙어 1대1 → 크로스', key:'1대1에서 이기면 낮고 빠른 크로스. 스트라이커는 니어, 반대 윙어는 파포스트. 뒤에는 3-2 유지.',
+      desc:'오른쪽 윙어가 상대 풀백과 1대1로 측면을 돌파해 낮은 크로스. 스트라이커가 니어포스트로 들어가 마무리. 팀 전체는 3-2를 유지하며 올라간다.',
+      ball:[{k:'drib'},{k:'pass',to:'ST'}],
+      move:{RW:[84,58],ST:[90,36],LW:[86,22],RCM:[76,44],LCM:[64,26],LB:[40,28],DM:[40,40],LCB:[28,22],RCB:[26,40],RB:[34,56]},
+      opp:{o5:[80,61],o4:[86,42],o3:[84,30],o8:[62,46],o9:[34,16],o10:[36,34],o11:[42,52],o6:[48,24],o7:[52,34],o2:[70,12]},
+      callouts:[{x:93,y:31,t:'슛!',c:'lime'}],
+      roles:{RW:'자신 있게 1대1! 돌파하면 낮고 빠른 크로스.',ST:'니어포스트로 쇄도.',LW:'파포스트로 쇄도.',RCM:'박스 앞 세컨볼 대기.',LB:'안쪽에서 역습 대비 (3-2의 ‘2’).'} }
+  ]
+},
+{
+  id:'planb', num:'03', title:'롱볼 전개', en:'Direct · Second Ball', vs:'vs 강한 맨투맨 압박', level:1,
+  desc:'짧은 길이 막혔을 때의 안전장치. 스트라이커 타겟 롱킥 → 세컨볼 → 뒷공간 침투.',
+  start: BASE,
+  oppStart:{o1:[101,34],o2:[58,12],o3:[56,30],o4:[45,47],o5:[58,58],o6:[27,13],o7:[30,31],o8:[42,28],o9:[27,55],o10:[17,27],o11:[17,41]},
+  roles:{
+    GK:'짧은 길이 다 막히면 무리하지 말고 “롱볼!” 외친 뒤 스트라이커 쪽으로 높고 길게.',
+    LCB:'롱킥이 나가면 함께 라인을 올린다 (하프라인 쪽으로 10~15m). 상대가 세컨볼을 주우면 즉시 대응.',
+    RCB:'롱킥이 나가면 함께 라인을 올린다. 반대편 침투 패스를 커버.',
+    LB:'높이 올라가 상대 수비를 넓게 벌린다. 세컨볼이 측면으로 흐르면 줍는다.',
+    RB:'높이 올라가 상대 수비를 넓게 벌린다. 세컨볼이 측면으로 흐르면 줍는다.',
+    DM:'세컨볼 존 뒤를 받친다. 상대가 공을 주우면 바로 압박해서 다시 뺏는다.',
+    LCM:'스트라이커 옆 5~8m. 헤딩으로 떨어지는 세컨볼을 먼저 줍는 사람!',
+    RCM:'스트라이커 반대쪽. 세컨볼이 이쪽으로 오면 줍고, 아니면 박스로 쇄도.',
+    LW:'스트라이커 왼쪽에서 대기. 공격이 반대편으로 가면 파포스트로.',
+    ST:'타겟맨. 하프라인 근처에서 몸싸움으로 공을 따내 옆 동료에게 떨궈준다 (뒤로 넘기지 말 것).',
+    RW:'상대 수비 라인과 나란히 서 있다가 뒷공간으로 대각선 침투. 오프사이드 주의!'
+  },
+  notes:{
+    when:'상대가 우리 진영 깊숙이 사람 대 사람으로 압박할 때 / 짧은 빌드업 실수가 반복될 때 / 앞서고 있어서 안전하게 갈 때.',
+    good:['짧은 길이 막혔으면 길게. 우리 골문 앞에서 뺏기는 게 최악','킥보다 중요한 건 대형: 스트라이커 주변에 3~4명이 모여 세컨볼 싸움','공이 넘어가면 전원 라인 업! 간격이 벌어지면 세컨볼을 다 뺏긴다'],
+    bad:['GK가 아무 데나 멀리 차기만 함 → 그냥 공 넘겨주기','롱킥 후 수비 라인이 그대로 → 미드와 수비 사이가 텅 빔','스트라이커가 헤딩을 뒤로 넘겨 아무도 없는 곳으로'],
+    tip:['GK 킥이 약하면 골킥은 킥 좋은 센터백이 대신','스트라이커 주변에 모이는 거리: 5~8m','짧은 빌드업(라볼피아나 A·B·C, 인버티드)이 다 막히면 마지막 카드로 롱볼 — 콜 사인을 미리 정하자']
+  },
+  steps:[
+    { title:'압박에 걸렸다: 짧은 길이 모두 막힘', key:'상대가 우리 선수 한 명 한 명에게 다 붙었다. 억지로 짧게 주면 우리 골문 앞에서 뺏긴다 → 실점 위험!',
+      desc:'상대가 맨투맨으로 높게 압박한다. 센터백도, 수비형 미드도, 풀백도 모두 상대가 붙어 있다.',
+      marks:[{from:'GK',to:'LCB'},{from:'GK',to:'DM'},{from:'GK',to:'RCB'}],
+      callouts:[{x:12,y:4.6,t:'짧은 패스 길 막힘',c:'red'}],
+      roles:{GK:'주변을 보고 짧은 패스 길이 모두 막혔으면 무리하지 않는다. “롱볼!” 콜.',LCB:'상대가 붙어 있으면 손을 들어 ‘막혔다’ 신호.',RCB:'상대가 붙어 있으면 손을 들어 ‘막혔다’ 신호.',ST:'롱볼 타겟이 될 준비. GK 쪽을 본다.'} },
+    { title:'롱볼 대형: 스트라이커 주변에 모이기', key:'스트라이커(키 크고 몸싸움 좋은 선수)이 하프라인 근처에 서고, 양쪽 미드·윙어가 그 주위를 둘러싼다. 떨어지는 공을 우리가 먼저 줍기 위해!',
+      desc:'GK의 “롱볼!” 콜에 맞춰 스트라이커가 하프라인으로 내려오고, 미드필더와 윙어가 스트라이커 주변에 ‘세컨볼 존’을 만든다.',
+      move:{ST:[54,33],LCM:[48,24],RCM:[48,42],LW:[62,14],RW:[62,56],DM:[40,34],LB:[36,8],RB:[36,60]},
+      opp:{o3:[58,32],o6:[32,10],o9:[32,58],o8:[44,28]},
+      zones:[{x:43,y:19,w:22,h:29,c:'gold',label:'세컨볼 존'}],
+      roles:{ST:'하프라인 근처, GK 킥이 오는 방향을 향해 선다. 상대 수비와 몸싸움 준비.',LCM:'스트라이커 주변 5~8m 거리. 헤딩으로 떨어지는 공(세컨볼)을 노린다.',RCM:'스트라이커 주변 5~8m 거리. 헤딩으로 떨어지는 공(세컨볼)을 노린다.',LW:'스트라이커 왼쪽에서 대기. 헤딩이 뒤로 넘어가면 뒷공간 침투.',RW:'스트라이커 오른쪽에서 대기. 뒷공간 침투 준비.',DM:'세컨볼을 상대가 주우면 바로 압박할 수 있게 뒤에서 받쳐준다.'} },
+    { title:'GK 롱킥 → 스트라이커 공중볼 경합', key:'GK는 스트라이커 쪽으로 높고 길게. 정확하지 않아도 ‘우리 선수들이 모여 있는 곳’으로 차면 된다.',
+      desc:'GK가 스트라이커를 향해 롱킥. 동시에 수비 라인 전체가 앞으로 올라와 간격을 좁힌다.',
+      ball:[{k:'long',to:'ST'}],
+      move:{ST:[55,32],LCB:[22,22],RCB:[22,46]}, opp:{o3:[58,29],o10:[24,28],o11:[24,40]},
+      callouts:[{x:55,y:25,t:'공중볼 경합',c:'gold'}],
+      roles:{GK:'멀리, 높게, 스트라이커 쪽 방향으로. 터치라인 밖으로만 나가지 않게.',ST:'공이 떨어질 곳으로 먼저 들어가 헤딩으로 옆 동료에게 떨궈준다 (뒤로 넘기지 말고).',LCB:'킥과 동시에 라인 올리기! 앞으로 달려 올라간다.',RCB:'킥과 동시에 라인 올리기! 앞으로 달려 올라간다.'} },
+    { title:'헤딩 떨궈주기 → 왼쪽 미드가 세컨볼', key:'헤딩한 공은 바로 옆 왼쪽 미드에게. 왼쪽 미드는 경합 순간 이미 뛰어들고 있어야 한다.',
+      desc:'스트라이커가 헤딩으로 옆에 있던 왼쪽 미드에게 떨궈준다. 오른쪽 윙어는 이미 뒷공간을 노리기 시작한다.',
+      ball:[{k:'pass',to:'LCM'}],
+      move:{LCM:[51,26],RW:[66,54],LW:[64,15],LCB:[28,22],RCB:[28,46],DM:[44,34]},
+      opp:{o8:[46,29]},
+      callouts:[{x:51,y:21,t:'세컨볼!',c:'gold'}],
+      roles:{LCM:'스트라이커가 헤딩하는 순간 공이 떨어질 곳으로 먼저 출발!',RW:'공이 우리에게 오면 바로 수비 뒷공간 침투 준비.',DM:'왼쪽 미드 뒤를 받쳐 상대가 공을 뺏으면 즉시 압박.'} },
+    { title:'반대편 윙어 뒷공간 침투 + 스루패스', key:'상대가 앞으로 압박했다는 건 = 뒤가 비었다는 뜻. 반대편 윙어가 대각선으로 뛰고 왼쪽 미드가 그 앞 공간에 찔러준다.',
+      desc:'왼쪽 미드가 고개를 들자마자 오른쪽 윙어가 수비 뒷공간으로 질주. 왼쪽 미드가 스루패스를 넣는다. 수비 라인은 계속 올라온다.',
+      ball:[{k:'through',to:'RW'}],
+      move:{RW:[82,50],ST:[62,32],LCM:[54,27],LCB:[34,22],RCB:[34,44],LB:[44,8],RB:[44,60],DM:[46,34]},
+      opp:{o5:[74,54],o4:[66,44],o3:[67,29],o2:[68,10]},
+      callouts:[{x:84,y:45.6,t:'뒷공간 침투!',c:'lime'}],
+      roles:{RW:'상대 수비와 나란히 있다가 패스 순간 대각선 질주. 오프사이드 주의!',LCM:'고개 들고 바로 앞 공간에 스루패스.',ST:'상대 센터백을 끌고 다녀 윙어 침투 공간을 만든다.',LCB:'계속 라인 업. 하프라인 근처까지.',RCB:'계속 라인 업. 하프라인 근처까지.'} },
+    { title:'박스 침투 → 컷백 마무리', key:'역습처럼 빠르게! 스트라이커·반대 윙어·오른쪽 미드가 박스로 들어가고, 윙어는 낮고 빠른 컷백.',
+      desc:'오른쪽 윙어가 박스 안까지 몰고 들어가 뒤로 내주는 컷백. 스트라이커가 니어포스트, 왼쪽 윙어가 파포스트로 쇄도.',
+      ball:[{k:'drib'},{k:'pass',to:'ST'}],
+      move:{RW:[92,48],ST:[91,34],LW:[86,20],RCM:[78,40],LCM:[70,28],LCB:[42,24],RCB:[42,44],DM:[56,34],LB:[56,8],RB:[58,60]},
+      opp:{o3:[86,27],o4:[87,41],o5:[85,53],o2:[80,16],o1:[102,36]},
+      callouts:[{x:93,y:29.5,t:'슛!',c:'lime'}],
+      roles:{ST:'니어포스트(가까운 골대)로 쇄도.',LW:'파포스트(먼 골대)로 들어간다.',RCM:'페널티박스 앞에서 흘러나오는 공 대기.',RW:'박스 안까지 몰고 들어가 낮고 빠르게 뒤로 내준다.',LCB:'하프라인 근처에서 역습 대비.',RCB:'하프라인 근처에서 역습 대비.'} }
+  ]
+},
+
+/* ---------------- 수비 · 압박 ---------------- */
+{
+  id:'highpress', type:'def', num:'04', title:'하이프레스', en:'High Press · Touchline Trap', vs:'vs 상대 골킥 빌드업', level:2,
+  desc:'상대 진영에서 바로 뺏는다. 가운데를 막아 측면으로 몰고, 터치라인에 가둬 여러 명이 동시에 압박.',
+  ballStart:'o1',
+  start:{GK:[8,34],LCB:[32,26],RCB:[32,42],LB:[36,12],RB:[36,56],DM:[54,34],LCM:[60,24],RCM:[60,44],LW:[68,12],ST:[72,34],RW:[68,56]},
+  oppStart:{o1:[101,34],o2:[82,8],o3:[92,24],o4:[92,44],o5:[82,60],o6:[70,20],o7:[80,34],o8:[70,48],o9:[52,8],o10:[46,34],o11:[52,60]},
+  roles:{
+    GK:'라인이 높이 올라가 있으니 뒷공간으로 오는 롱볼을 미리 나와서 처리할 준비. 수비 라인 위치를 계속 콜.',
+    LCB:'압박할 때는 하프라인 근처까지 라인을 올린다. 상대 공격수가 내려가 받으면 따라붙는다.',
+    RCB:'왼쪽 센터백과 간격 10m 유지하며 라인 올리기. 공 반대쪽이면 안으로 좁힌다.',
+    LB:'공이 우리 왼쪽 측면으로 오면 앞으로 튀어나가 상대 윙어에게 바짝 붙는다.',
+    RB:'공 반대쪽이면 안쪽으로 좁혀 센터백을 도와 3백처럼 선다.',
+    DM:'가운데 지킴이. 상대 공격형 미드필더·공격수에게 가는 중앙 패스를 막는다.',
+    LCM:'공 쪽 왼쪽 미드. 상대 미드필더 등 뒤에 바짝 붙어 안쪽 패스를 끊는다.',
+    RCM:'공 반대편이면 중앙으로 좁혀 수비형 미드 옆을 지킨다.',
+    LW:'상대가 풀백에게 패스하는 순간이 너의 출발 신호! 안쪽에서 바깥으로 달려가 터치라인 쪽으로 몰아붙인다.',
+    ST:'압박의 시작. 공 가진 센터백에게 ‘안쪽에서 바깥으로’ 휘어 달려가 가운데 길을 몸으로 가린다.',
+    RW:'공 반대쪽이면 안으로 좁혀서 반대편으로 넘어오는 긴 패스를 노린다.'
+  },
+  notes:{
+    when:'상대가 골킥·후방에서 짧게 빌드업할 때 / 경기 초반 기세를 잡고 싶을 때 / 상대 수비수가 발밑이 약할 때.',
+    good:['신호(트리거)에 맞춰 같이 뛴다: 센터백에게 가는 패스, 등지고 받기, 나쁜 첫 터치','가운데는 막고 측면으로 몬다. 터치라인은 우리 편 수비수','한 명이 뛰면 모두 한 칸씩 올라간다 (뒤에 빈 공간 남기지 않기)'],
+    bad:['스트라이커 혼자 뛰고 나머지는 구경 → 체력만 낭비','공을 향해 직선으로 뛰어서 반대쪽 길을 열어줌','앞은 압박하는데 수비 라인은 그대로 → 미드와 수비 사이가 텅 빔'],
+    tip:['아마추어는 90분 내내 하이프레스 불가. 골킥 때·경기 초반 10분처럼 ‘정한 순간’에만','압박 신호 콜을 정하자: “가!” 또는 “트리거!”','뚫리면 바로 미드블록(4-4-2)으로 내려오기']
+  },
+  steps:[
+    { title:'준비: 상대 골킥, 신호를 기다린다', key:'아무나 먼저 뛰어나가지 않는다. 신호(트리거)가 오면 다 같이 간다. 신호 = GK가 센터백에게 패스하는 순간.',
+      desc:'상대 GK가 공을 잡고 짧게 빌드업하려 한다. 우리는 4-3-3 대형으로 상대 진영 앞에 자리 잡고 기다린다.',
+      callouts:[{x:72,y:29.4,t:'신호 대기',c:'cyan'}],
+      roles:{ST:'상대 센터백 두 명 사이에 서서 GK를 본다. 아직 뛰지 말 것.',LW:'상대 센터백과 풀백 사이 중간에 서서 둘 다 볼 수 있게.',RW:'왼쪽 윙어와 같은 위치를 반대쪽에서.',LCM:'상대 미드필더 근처에 붙어 있는다.',RCM:'상대 미드필더 근처에 붙어 있는다.'} },
+    { title:'트리거! 스트라이커가 휘어 달려간다', key:'스트라이커 몸 뒤쪽이 ‘그림자’ — 그 방향으로는 패스가 못 간다. 상대는 측면(풀백)으로 줄 수밖에 없다.',
+      desc:'GK가 센터백에게 패스한 순간 압박 시작. 스트라이커는 직선이 아니라 안쪽에서 바깥으로 휘어 달려가 가운데 길을 몸으로 가린다.',
+      ball:[{k:'opass',to:'o3'}],
+      move:{ST:[86,29],LW:[76,15],LCM:[64,22],RCM:[66,42],DM:[58,34],RW:[74,44]},
+      press:['ST'], shadows:[{who:'ST',from:'o3'}],
+      callouts:[{x:84,y:39.6,t:'안쪽부터 막고 바깥으로',c:'cyan'}],
+      roles:{ST:'센터백에게 휘어 달려간다. 안쪽(상대 수비형 미드 쪽)을 가리면서 바깥으로 몰아준다.',LW:'한 걸음 안쪽으로. 상대 풀백에게 가는 패스를 ‘일부러’ 열어두고 기다린다.',LCM:'상대 미드필더 등 뒤에 바짝.',DM:'한 칸 올라가 중앙을 좁힌다.',RW:'안으로 좁혀 반대쪽 센터백을 견제.'} },
+    { title:'측면으로 유도 → 상대 풀백에게 패스', key:'측면은 터치라인이 한쪽을 막아준다. 상대가 풀백에게 주는 순간이 우리가 뺏을 순간!',
+      desc:'가운데가 막힌 상대 센터백은 풀백에게 패스한다. 이 순간 윙어가 출발하고, 팀 전체가 공 쪽으로 이동한다.',
+      ball:[{k:'opass',to:'o2'}],
+      move:{LW:[79,13],LB:[53,10],ST:[87,16],LCM:[67,17],DM:[62,28],RCM:[64,38],RW:[70,44],LCB:[40,22],RCB:[40,38],RB:[40,52],GK:[12,32]},
+      opp:{o9:[60,5],o6:[72,22],o8:[72,50]},
+      press:['LW','LB'], shadows:[{who:'ST',from:'o2'}],
+      zones:[{x:72,y:0,w:22,h:20,c:'red',label:'압박 함정'}],
+      callouts:[{x:58,y:-1.6,t:'터치라인도 우리 편!',c:'gold'}],
+      roles:{LW:'패스가 풀백에게 가는 순간 전력 질주. 안쪽에서 바깥 방향으로 막는다.',LB:'앞으로 튀어나가 상대 윙어를 바짝 마크. 라인 따라가는 패스를 끊는다.',ST:'센터백에게 돌리는 백패스 길을 막는다.',LCM:'상대 미드필더를 따라 안쪽 패스 길 차단.',LCB:'라인을 올리고 공 쪽으로 이동.',RCB:'라인을 올리고 공 쪽으로 좁힌다.',RB:'안으로 좁혀 센터백들과 3백처럼.',RW:'안으로 좁혀 반대편 긴 패스 대비.',GK:'수비 라인이 올라갔으니 같이 앞으로.'} },
+    { title:'가두기: 출구를 모두 막는다', key:'모든 패스 길을 막으면 상대는 무리한 드리블이나 아무 데로나 차는 롱볼밖에 없다.',
+      desc:'상대 풀백이 터치라인에 갇혔다. 앞(윙어), 안쪽(왼쪽 미드), 뒤(스트라이커), 라인(왼쪽 풀백) — 네 방향이 모두 막혔다.',
+      move:{LW:[78,10],LCM:[76,17],ST:[87,14],LB:[60,10],DM:[66,26]},
+      press:['LCM'], shadows:[{who:'ST',from:'o2'},{who:'LCM',from:'o2'}],
+      callouts:[{x:82,y:2.8,t:'출구 없음!',c:'red'}],
+      roles:{LW:'정면에서 압박. 발을 함부로 뻗지 말고 몸으로 길을 막으며 기다린다.',LCM:'안쪽 미드필더로 가는 길 차단.',ST:'센터백에게 돌리는 백패스 길 차단.',LB:'상대 윙어 앞을 막아 라인 패스 차단.',DM:'중앙으로 빠져나오는 공 대비.'} },
+    { title:'탈취 → 바로 골문으로', key:'상대 진영에서 뺏으면 골문까지 20~30m! 3번 이내 패스로 슈팅까지.',
+      desc:'갇힌 상대가 실수하는 순간 윙어가 뺏는다. 스트라이커는 곧바로 박스로 침투하고, 윙어가 찔러준다.',
+      ball:[{k:'steal',to:'LW'},{k:'through',to:'ST'}],
+      move:{LW:[80,12],ST:[94,27],RW:[88,40],RCM:[78,40],LCM:[76,18]},
+      opp:{o3:[92,34],o4:[93,45],o7:[82,32]},
+      callouts:[{x:74,y:6.6,t:'탈취!',c:'lime'},{x:97,y:22.6,t:'슛!',c:'lime'}],
+      roles:{LW:'뺏자마자 고개 들고 스트라이커에게.',ST:'뺏는 순간 박스 안으로 침투.',RW:'반대편에서 파포스트로 쇄도.',RCM:'박스 앞에서 흘러나오는 공 대기.'} }
+  ]
+},
+{
+  id:'midblock', type:'def', num:'05', title:'미드블록 4-4-2', en:'Mid Block · Compact 4-4-2', vs:'vs 하프라인 빌드업', level:1,
+  desc:'체력을 아끼는 기본 수비. 두 줄 블록으로 가운데를 잠그고, 측면으로 오면 다 같이 밀어붙여 뺏는다.',
+  ballStart:'o3',
+  start:{GK:[6,34],LCB:[28,26],RCB:[28,42],LB:[30,10],RB:[30,58],DM:[44,36],LCM:[48,24],RCM:[48,44],LW:[60,10],ST:[60,34],RW:[60,58]},
+  oppStart:{o1:[100,34],o2:[70,8],o3:[80,24],o4:[80,44],o5:[70,60],o6:[56,22],o7:[66,34],o8:[56,46],o9:[44,10],o10:[36,30],o11:[44,58]},
+  roles:{
+    GK:'수비 라인 뒤 공간을 커버. 블록 간격이 벌어지면 “올라와!” 콜.',
+    LCB:'수비 4명 한 줄 유지. 미드 라인과 간격 10~15m. 줄 사이로 들어오는 상대 공격수를 앞에서 막는다.',
+    RCB:'수비 4명 한 줄 유지. 미드 라인과 간격 10~15m. 줄 사이로 들어오는 상대 공격수를 앞에서 막는다.',
+    LB:'공이 반대편이면 안으로 좁혀 센터백 옆으로. 공이 내 쪽이면 상대 윙어에게 붙는다.',
+    RB:'공이 내 쪽 측면으로 오면 상대 윙어에게 바짝. 오른쪽 윙어와 함께 2대1로 가둔다.',
+    DM:'미드 4명의 가운데. 상대가 안쪽으로 찌르는 패스를 가로챈다.',
+    LCM:'미드 4명의 가운데. 수비형 미드와 간격 10m 유지하며 같이 좌우로 이동.',
+    RCM:'수비 시 스트라이커 옆으로 올라가 투톱이 된다. 상대 수비형 미드에게 가는 패스 길을 몸으로 막는다.',
+    LW:'수비 시 미드 라인까지 내려와 4-4-2의 왼쪽 미드필더가 된다.',
+    ST:'투톱. 상대 센터백 사이에서 가운데 길을 막고 측면으로 몬다.',
+    RW:'수비 시 미드 라인으로 내려와 오른쪽 미드필더. 공이 이쪽 측면으로 오면 압박 출발.'
+  },
+  notes:{
+    when:'상대가 하프라인 근처에서 공을 돌릴 때 / 하이프레스가 뚫렸을 때 / 체력을 아껴야 할 때 (경기 후반).',
+    good:['두 줄(수비 4 + 미드 4) 간격 10~15m — 줄 사이에 공간을 주지 않는다','투톱은 공을 뺏는 게 아니라 ‘가운데 길을 막는’ 역할','공이 측면으로 가면 11명 모두 공 쪽으로 슬라이드'],
+    bad:['한 명만 공 쪽으로 뛰쳐나가 블록에 구멍이 생김','수비 라인이 너무 내려가 미드 라인과 간격이 벌어짐','공 반대편 선수들이 제자리에 서 있음'],
+    tip:['처음엔 줄을 잡고(또는 옆 사람과 손잡고) 함께 좌우로 움직이는 놀이로 연습','공 반대편 측면은 비워도 괜찮다 — 거기까지 공이 가려면 시간이 걸린다','뺏으면 3초 안에 앞으로! 상대가 올라와 있어 뒤가 비어 있다']
+  },
+  steps:[
+    { title:'수비 시작: 4-3-3 → 4-4-2 블록으로 변신', key:'두 줄(수비 4 + 미드 4) 간격 10~15m. 줄과 줄 사이에 상대가 받을 공간을 안 준다.',
+      desc:'상대가 하프라인 근처에서 공을 돌린다. 양 윙어는 미드 라인으로 내려오고, 오른쪽 미드가 스트라이커 옆으로 올라가 투톱이 된다.',
+      move:{LW:[48,10],RW:[48,58],LCM:[48,26],DM:[48,42],ST:[62,28],RCM:[62,40],LB:[34,12],LCB:[32,27],RCB:[32,41],RB:[34,56],GK:[8,34]},
+      opp:{o9:[42,6],o11:[42,62],o10:[40,34]},
+      zones:[{x:29,y:4,w:22,h:60,c:'gold',label:'두 줄 블록 · 간격 10~15m'}],
+      callouts:[{x:55.5,y:34.9,t:'투톱',c:'cyan'}],
+      roles:{LW:'미드 라인까지 내려와 왼쪽 미드필더 자리로.',RW:'미드 라인까지 내려와 오른쪽 미드필더 자리로.',RCM:'스트라이커 옆으로 올라가 투톱 완성.',LCB:'수비 라인 정렬. 미드 라인과의 간격 확인.',RCB:'수비 라인 정렬. 미드 라인과의 간격 확인.',DM:'미드 4명 가운데. 양옆 간격 맞추기.',LCM:'미드 4명 가운데. 수비형 미드와 나란히.'} },
+    { title:'투톱이 가운데 길을 막는다', key:'투톱은 공을 뺏으러 뛰는 게 아니라 ‘가운데로 못 주게’ 길을 막는다. 상대는 측면으로 갈 수밖에 없다.',
+      desc:'상대 센터백끼리 패스. 오른쪽 미드는 공 가진 센터백과 상대 수비형 미드 사이 길 위에 서서 몸으로 가린다.',
+      ball:[{k:'opass',to:'o4'}],
+      move:{ST:[70,28],RCM:[72,38]},
+      shadows:[{who:'RCM',from:'o4'}],
+      callouts:[{x:64,y:49.5,t:'가운데 못 주게!',c:'cyan'}],
+      roles:{RCM:'공 가진 센터백과 상대 수비형 미드 사이 길 위에 선다.',ST:'반대편 센터백으로 돌아가는 패스를 막는다.',DM:'상대 미드필더 근처 유지. 블록 밖으로 뛰쳐나가지 않기.'} },
+    { title:'측면으로 가면 블록 전체가 슬라이드', key:'블록은 한 몸처럼! 공이 오른쪽으로 가면 모두 5~10m 오른쪽으로. 반대편 측면은 비워도 된다.',
+      desc:'상대가 측면(풀백)으로 패스하자 블록 전체가 오른쪽으로 이동한다. 오른쪽 윙어는 압박 출발, 오른쪽 풀백은 상대 윙어에게 붙는다.',
+      ball:[{k:'opass',to:'o5'}],
+      move:{RW:[64,55],RB:[38,57],DM:[52,46],LCM:[50,34],LW:[48,22],LB:[34,20],LCB:[32,32],RCB:[32,44],ST:[66,40],RCM:[74,48]},
+      opp:{o8:[58,50],o10:[42,40],o6:[56,30],o11:[42,62]},
+      press:['RW','RB'],
+      callouts:[{x:40,y:66.3,t:'다 같이 공 쪽으로!',c:'gold'}],
+      roles:{RW:'상대 풀백에게 압박 출발. 안쪽 길을 막으며 접근.',RB:'상대 윙어에게 바짝 붙는다.',DM:'공 쪽으로 이동해 안쪽 패스 길목에 선다.',LCM:'수비형 미드 쪽으로 좁혀 중앙을 지킨다.',LW:'안쪽으로 좁혀 중앙으로. 반대편 측면은 비워도 OK.',LB:'센터백 쪽으로 좁혀 들어온다.',LCB:'공 쪽으로 같이 이동.',RCB:'공 쪽으로 같이 이동.',RCM:'백패스 길을 막아 상대를 측면에 가둔다.'} },
+    { title:'가로채기: 안쪽 패스를 노린다', key:'측면 압박(윙어 + 풀백) + 안쪽 길목(수비형 미드) = 상대는 어디로 줘도 위험.',
+      desc:'측면에 갇힌 상대가 억지로 안쪽으로 패스한다. 미리 길목에 있던 수비형 미드가 가로챈다.',
+      ball:[{k:'steal',to:'DM'}],
+      move:{DM:[56,48],RW:[66,57]}, opp:{o8:[61,53]},
+      callouts:[{x:56,y:44,t:'가로채기!',c:'lime'}],
+      roles:{DM:'패스가 올 길목에서 기다렸다가 가로챈다. 첫 터치는 앞으로!',RW:'상대 풀백을 정면 압박.',RB:'상대 윙어 마크 유지.'} },
+    { title:'역습: 뺏은 즉시 앞으로', key:'뺏으면 3초 안에 앞으로. 상대가 공격하러 올라와 있어서 뒤가 비어 있다.',
+      desc:'수비형 미드가 가로채자마자 오른쪽 미드에게, 오른쪽 미드는 뒷공간으로 뛰는 스트라이커에게 찔러준다.',
+      ball:[{k:'pass',to:'RCM'},{k:'through',to:'ST'}],
+      move:{RCM:[70,44],ST:[86,32],LW:[76,18],RW:[74,56],LCM:[62,32]},
+      opp:{o3:[84,26],o4:[84,40],o7:[64,38],o6:[58,27],o2:[72,10]},
+      callouts:[{x:90,y:27.5,t:'역습!',c:'lime'}],
+      roles:{ST:'뺏는 순간 상대 센터백 뒤 공간으로 질주.',RCM:'원터치로 스트라이커 앞 공간에.',LW:'반대편에서 박스로 쇄도.',DM:'패스 후 다시 수비 위치로.'} }
+  ]
+},
+{
+  id:'gegen', type:'def', num:'06', title:'게겐프레싱 5초 룰', en:'Gegenpressing · Counter-press', vs:'vs 상대 역습', level:3,
+  desc:'공을 잃은 순간이 다시 뺏을 최고의 기회. 가까운 3명이 5초 안에 달려들고, 나머지는 패스 길을 막는다.',
+  ballStart:'LCM',
+  start:{GK:[14,34],LCB:[40,24],RCB:[40,44],LB:[60,8],RB:[58,60],DM:[52,34],LCM:[68,26],RCM:[70,44],LW:[80,14],ST:[84,34],RW:[82,54]},
+  oppStart:{o1:[101,34],o2:[88,14],o3:[90,28],o4:[90,40],o5:[88,54],o6:[76,22],o7:[76,34],o8:[78,46],o9:[66,12],o10:[62,34],o11:[66,56]},
+  roles:{
+    GK:'라인이 높으니 뒷공간 롱볼 대비. 미리 페널티박스 밖까지 나와 있는다.',
+    LCB:'공격 중에도 뒤에 남아 있는 대비 조. 공을 잃으면 앞으로 올라가 간격을 좁힌다.',
+    RCB:'왼쪽 센터백과 함께 뒤 대비. 상대 공격수 한 명을 미리 체크.',
+    LB:'공 근처라면 상대 윙어에게 가는 길을 노린다. 가로채기 1순위.',
+    RB:'공 반대쪽이면 안으로 좁혀 센터백을 돕는다.',
+    DM:'공을 잃으면 상대가 가장 패스하고 싶은 중앙 길 위에 선다.',
+    LCM:'공을 잃은 사람 = 가장 먼저 압박할 사람! 실망할 시간 없이 바로 달려든다.',
+    RCM:'중앙으로 좁혀 상대 미드필더에게 가는 길 차단.',
+    LW:'공 근처라면 바로 압박에 합류. 옆에서 상대를 몰아준다.',
+    ST:'상대가 뒤(센터백)로 돌리는 패스 길을 막는다.',
+    RW:'반대편이면 안으로 좁혀 반대 전환 대비.'
+  },
+  notes:{
+    when:'상대 진영에서 공격하다가 공을 잃었을 때 (언제나!). 특히 역습이 빠른 팀을 상대할 때.',
+    good:['공을 잃은 순간 = 상대 대형이 흩어진 순간. 바로 다시 뺏는다','공 근처 3명은 공으로, 나머지는 ‘공이 갈 만한 곳’의 길을 막는다','공격 중에도 센터백 2명 + 수비형 미드는 뒤에 남는다 (레스트 디펜스)'],
+    bad:['공을 잃고 아쉬워하며 멈춰 섬 — 그 1~2초에 역습 당함','모두 공으로 몰려가 패스 한 번에 뚫림','5초가 지났는데도 계속 쫓아다님 → 대형 붕괴'],
+    tip:['클롭 감독으로 유명한 ‘게겐프레싱’. 우리는 단순하게 “5초 룰”로','5초 안에 못 뺏으면 → 즉시 내려와 미드블록(4-4-2)으로 전환','공 잃은 선수에게 “다시!” 콜 — 실수보다 반응이 중요']
+  },
+  steps:[
+    { title:'공격 중: 뒤를 미리 대비 (레스트 디펜스)', key:'공격할 때도 3명은 뒤에. 그래야 공을 잃어도 바로 압박할 수 있다.',
+      desc:'우리가 상대 진영에서 공격 중이다. 그래도 센터백 2명과 수비형 미드는 뒤에 남아 공을 잃을 때를 대비한다.',
+      zones:[{x:36,y:20,w:21,h:28,c:'gold',label:'뒤 대비 3명'}],
+      roles:{DM:'공격 중이어도 센터백 앞을 지킨다.',LCB:'하프라인 근처까지 올라와 있되 뒤 공간 체크.',RCB:'하프라인 근처까지 올라와 있되 뒤 공간 체크.',LCM:'공을 가지고 있다. 패스 길을 찾는 중.'} },
+    { title:'공을 잃었다!', key:'공을 잃는 순간 = 상대가 가장 약한 순간. 상대는 아직 수비 대형이라 흩어져 있다.',
+      desc:'왼쪽 미드의 패스가 상대 미드필더에게 끊겼다. 상대가 역습하려면 첫 패스가 필요하다 — 그 첫 패스를 막아야 한다.',
+      ball:[{k:'lost',to:'o6'}],
+      opp:{o6:[74,22]},
+      callouts:[{x:62,y:19,t:'공 뺏김!',c:'red'}],
+      roles:{LCM:'아쉬워할 시간 없다! 바로 다음 단계 준비.',LW:'공 근처에 있다 — 압박 합류 준비.',ST:'상대 뒤쪽 패스 길 확인.'} },
+    { title:'5초 룰: 가장 가까운 3명이 즉시 압박', key:'공 근처 3명은 공으로! 나머지는 ‘공이 갈 만한 곳’의 패스 길을 막는다.',
+      desc:'공 근처 왼쪽 미드·윙어·스트라이커가 곧바로 달려든다. 수비형 미드는 중앙 길, 스트라이커는 뒤로 돌리는 길을 몸으로 막는다. 수비 라인도 올라와 간격을 좁힌다.',
+      move:{LCM:[70,26],LW:[79,17],ST:[80,29],DM:[66,30],LCB:[48,26],RCB:[48,42],LB:[62,10],RCM:[72,38],RB:[58,56]},
+      press:['LCM','LW','ST'], shadows:[{who:'ST',from:'o6'},{who:'DM',from:'o6'}],
+      callouts:[{x:86.5,y:21.5,t:'5초!',c:'gold',big:1}],
+      roles:{LCM:'공 잃은 사람이 가장 먼저! 정면에서 압박.',LW:'옆에서 압박해 측면으로 못 빠져나가게.',ST:'뒤로 돌리는 패스 차단.',DM:'상대 공격수에게 가는 중앙 길 위에 선다.',LCB:'라인 올려 간격 좁히기.',RCB:'라인 올려 간격 좁히기.',LB:'상대 윙어 쪽 패스를 노린다.',RCM:'중앙으로 좁혀 상대 미드필더 길 차단.'} },
+    { title:'가로채기: 급하게 찬 패스를 줍는다', key:'길이 다 막히면 상대는 급하게 찬다 → 우리가 줍는다.',
+      desc:'사방이 막힌 상대가 급하게 측면으로 패스. 미리 길목을 노리던 왼쪽 풀백이 가로챈다.',
+      ball:[{k:'steal',to:'LB'}],
+      move:{LB:[64,16]},
+      callouts:[{x:55,y:17.6,t:'가로채기!',c:'lime'}],
+      roles:{LB:'상대 윙어보다 한 발 먼저 패스 길로 들어가 가로챈다.',LCM:'가로채는 순간 패스 받을 위치로.'} },
+    { title:'다시 공격: 상대 대형이 무너진 틈', key:'다시 뺏은 순간이 가장 좋은 득점 찬스. 빠르게 골문으로!',
+      desc:'상대는 역습하려고 앞으로 나오던 중이라 수비 대형이 무너져 있다. 왼쪽 미드를 거쳐 스트라이커에게 바로 찔러준다.',
+      ball:[{k:'pass',to:'LCM'},{k:'through',to:'ST'}],
+      move:{LCM:[72,20],ST:[92,32],RW:[90,48],LW:[84,14],RCM:[78,38],DM:[64,30]},
+      opp:{o6:[78,27],o3:[86,26],o2:[90,20],o7:[78,32]},
+      callouts:[{x:97,y:27.3,t:'골 찬스!',c:'lime'}],
+      roles:{LCM:'원터치로 스트라이커 앞 공간에.',ST:'상대 센터백 사이로 침투.',RW:'파포스트로 쇄도.',LW:'박스 왼쪽으로 쇄도.'} }
+  ]
+}
+];
+
+/* =========================================================
+   3. 데이터 정리: 각 단계의 시작/끝 위치와 공 소유자 계산
+   ========================================================= */
+SCN.forEach(s => {
+  const par = s.parent ? SCN.find(x => x.id === s.parent) : null;
+  if (par) {
+    ['type','num','title','en','vs','level','desc','roles'].forEach(k => { if (s[k] === undefined) s[k] = par[k]; });
+    const src = par.steps[s.startFrom];
+    s.start = src.P; s.oppStart = src.O; s.ballStart = src.holder;
+  }
+  s.type = s.type || 'atk';
+  let P = {...s.start}, O = {...s.oppStart}, holder = s.ballStart || 'GK';
+  s.steps.forEach(st => {
+    st.prevP = P; st.prevO = O; st.prevHolder = holder;
+    P = {...P, ...(st.move || {})};
+    O = {...O, ...(st.opp || {})};
+    st.P = P; st.O = O;
+    (st.ball || []).forEach(ev => { if (ev.k !== 'drib') holder = ev.to; });
+    st.holder = holder;
+  });
+});
+
+/* =========================================================
+   4. 수학 유틸
+   ========================================================= */
+const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+const easeOut = t => 1 - Math.pow(1 - t, 2);
+const lerp = (a, b, t) => [a[0] + (b[0]-a[0])*t, a[1] + (b[1]-a[1])*t];
+const dist = (a, b) => Math.hypot(b[0]-a[0], b[1]-a[1]);
+const isOpp = k => k.charAt(0) === 'o';
+const f = n => n.toFixed(2);
+
+function posAt(st, k, u) {
+  const a = isOpp(k) ? st.prevO[k] : st.prevP[k];
+  const b = isOpp(k) ? st.O[k] : st.P[k];
+  return lerp(a, b, ease(Math.max(0, Math.min(1, u))));
+}
+function schedule(st) {
+  const evs = st.ball || [];
+  if (!evs.length) return [];
+  const a0 = .12, span = (1 - a0) / evs.length;
+  let h = st.prevHolder;
+  return evs.map((ev, j) => {
+    const seg = {k: ev.k, from: h, to: ev.to, a: a0 + j*span, b: a0 + (j+1)*span};
+    if (ev.k !== 'drib') h = ev.to;
+    return seg;
+  });
+}
+function shorten(a, b, s0, s1) {
+  const dx = b[0]-a[0], dy = b[1]-a[1], L = Math.hypot(dx, dy) || 1;
+  if (L < s0 + s1 + .8) return [a, b];
+  return [[a[0] + dx/L*s0, a[1] + dy/L*s0], [b[0] - dx/L*s1, b[1] - dy/L*s1]];
+}
+function longCtrl(a, b) {
+  const dx = b[0]-a[0], dy = b[1]-a[1], L = Math.hypot(dx, dy) || 1;
+  let px = -dy/L, py = dx/L;
+  if (py > 0) { px = -px; py = -py; }
+  return [(a[0]+b[0])/2 + px*L*.22, (a[1]+b[1])/2 + py*L*.22];
+}
+function bez(a, c, b, t) {
+  const m = 1 - t;
+  return [m*m*a[0] + 2*m*t*c[0] + t*t*b[0], m*m*a[1] + 2*m*t*c[1] + t*t*b[1]];
+}
+function wavyD(a, b) {
+  const dx = b[0]-a[0], dy = b[1]-a[1], L = Math.hypot(dx, dy);
+  if (L < .5) return `M${f(a[0])} ${f(a[1])}`;
+  const px = -dy/L, py = dx/L, waves = Math.max(2, Math.round(L / 3.2)), N = waves * 10;
+  let d = '';
+  for (let i = 0; i <= N; i++) {
+    const s = i / N, amp = .55 * Math.min(1, (1 - s) / .12);
+    const off = Math.sin(s * waves * Math.PI * 2) * amp;
+    d += (i ? 'L' : 'M') + f(a[0] + dx*s + px*off) + ' ' + f(a[1] + dy*s + py*off);
+  }
+  return d;
+}
+
+/* =========================================================
+   5. SVG 빌드
+   ========================================================= */
+const NS = 'http://www.w3.org/2000/svg';
+const $ = id => document.getElementById(id);
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+
+const STYLE = {
+  pass:    {c:'#ffffff', w:.45},
+  through: {c:'#a6f25c', w:.5},
+  long:    {c:'#f3c560', w:.5},
+  run:     {c:'#4fd8ff', w:.38, dash:'1.1 .85'},
+  drib:    {c:'#ff9f43', w:.4},
+  block:   {c:'#ff5d73', w:.38, dash:'.8 .8'},
+  lost:    {c:'#ff5d73', w:.45},
+  opass:   {c:'#ff8a98', w:.38},
+  steal:   {c:'#a6f25c', w:.5, dash:'.9 .5'},
+  press:   {c:'#ff4fa3', w:.5, dash:'1.3 .6'},
+  opprun:  {c:'#ff8a98', w:.26, dash:'.7 .7', op:.65}
+};
+const CALL_C = {gold:'#ffffff', red:'#ff7b8d', cyan:'#4fd8ff', lime:'#b8f57a'};
+
+function holderPos(st, k) { return isOpp(k) ? st.O[k] : st.P[k]; }
+
+function buildDefs() {
+  const defs = $('defs');
+  for (const k in STYLE) {
+    const m = el('marker', {id:'m-' + k, viewBox:'0 0 10 10', refX:'7', refY:'5', markerWidth:'5', markerHeight:'5', orient:'auto-start-reverse', markerUnits:'strokeWidth'}, defs);
+    el('path', {d:'M0 0L10 5L0 10z', fill:STYLE[k].c}, m);
+  }
+}
+
+function buildField() {
+  const g = $('field');
+  for (let i = 0; i < 10; i++) el('rect', {x:i*10.5, y:0, width:10.5, height:68, fill: i % 2 ? '#1e7a42' : '#1a6d3a'}, g);
+  el('rect', {x:-4, y:-5, width:113, height:78, fill:'none'}, g);
+  el('image', {href:EMBLEM, x:52.5 - 6.3, y:34 - 9, width:12.6, height:18, opacity:'.16', preserveAspectRatio:'xMidYMid meet'}, g);
+  el('rect', {x:0, y:0, width:105, height:68, fill:'url(#light)'}, g);
+  el('rect', {x:0, y:0, width:105, height:68, fill:'url(#vign)'}, g);
+  const L = el('g', {fill:'none', stroke:'rgba(255,255,255,.78)', 'stroke-width':'.3'}, g);
+  el('rect', {x:0, y:0, width:105, height:68}, L);
+  el('line', {x1:52.5, y1:0, x2:52.5, y2:68}, L);
+  el('circle', {cx:52.5, cy:34, r:9.15}, L);
+  el('rect', {x:0, y:13.84, width:16.5, height:40.32}, L);
+  el('rect', {x:0, y:24.84, width:5.5, height:18.32}, L);
+  el('rect', {x:88.5, y:13.84, width:16.5, height:40.32}, L);
+  el('rect', {x:99.5, y:24.84, width:5.5, height:18.32}, L);
+  el('path', {d:'M16.5 26.69A9.15 9.15 0 0 1 16.5 41.31'}, L);
+  el('path', {d:'M88.5 26.69A9.15 9.15 0 0 0 88.5 41.31'}, L);
+  el('path', {d:'M0 1A1 1 0 0 0 1 0M104 0A1 1 0 0 0 105 1M105 67A1 1 0 0 0 104 68M1 68A1 1 0 0 0 0 67'}, L);
+  el('rect', {x:-1.8, y:30.34, width:1.8, height:7.32, stroke:'rgba(255,255,255,.9)'}, L);
+  el('rect', {x:105, y:30.34, width:1.8, height:7.32, stroke:'rgba(255,255,255,.9)'}, L);
+  const S = el('g', {fill:'rgba(255,255,255,.85)'}, g);
+  el('circle', {cx:52.5, cy:34, r:.35}, S);
+  el('circle', {cx:11, cy:34, r:.3}, S);
+  el('circle', {cx:94, cy:34, r:.3}, S);
+  const T = el('g', {'font-family':'Bebas Neue, Impact, sans-serif', 'font-size':'1.9', 'letter-spacing':'.3', fill:'rgba(255,255,255,.4)'}, g);
+  el('text', {x:0, y:71.2}, T).textContent = '◀ OUR GOAL';
+  el('text', {x:105, y:71.2, 'text-anchor':'end'}, T).textContent = 'ATTACK ▶';
+
+  // 5-lane overlay
+  const lanes = $('lanes');
+  const bands = [[0,13.84,'측면'],[13.84,24.84,'하프스페이스'],[24.84,43.16,'중앙'],[43.16,54.16,'하프스페이스'],[54.16,68,'측면']];
+  bands.forEach(([y0, y1, name], i) => {
+    el('rect', {x:0, y:y0, width:105, height:y1-y0, fill: (i===1||i===3) ? 'rgba(79,216,255,.10)' : (i===2 ? 'rgba(79,124,255,.05)' : 'rgba(255,255,255,.035)')}, lanes);
+    if (i) el('line', {x1:0, y1:y0, x2:105, y2:y0, stroke:'rgba(255,255,255,.35)', 'stroke-width':'.15', 'stroke-dasharray':'.8 .8'}, lanes);
+    el('text', {x:103.6, y:(y0+y1)/2 + .5, 'text-anchor':'end', class:'lane-lbl'}, lanes).textContent = name;
+  });
+}
+
+const nodes = {};
+function buildPlayers() {
+  const team = $('team'), opp = $('opp');
+  ORDER.forEach(k => {
+    const gk = k === 'GK';
+    const g = el('g', {class:'pl', 'data-k':k, tabindex:'0', role:'button', 'aria-label': `${POS[k].nm} · ${POS[k].ko}`}, team);
+    el('circle', {class:'sel-ring', r:3.5, fill:'none', stroke:'#9ec0ff', 'stroke-width':'.4', 'stroke-dasharray':'1 .7'}, g);
+    el('ellipse', {cx:.25, cy:.6, rx:2.3, ry:2.1, fill:'rgba(0,0,0,.35)'}, g);
+    el('circle', {class:'body', r:2.3, fill: gk ? 'url(#gCyan)' : 'url(#gKit)', stroke: gk ? '#0b1426' : '#2f5bea', 'stroke-width': gk ? '.35' : '.45'}, g);
+    el('text', {y:.78, 'text-anchor':'middle', 'font-size':'2.15', 'font-weight':'800', fill:'#0b1a4a', 'font-family':'Bebas Neue, Impact, sans-serif', style:'pointer-events:none'}, g).textContent = POS[k].n;
+    el('text', {y:4.4, 'text-anchor':'middle', 'font-size': POS[k].nm.length > 8 ? '1.05' : POS[k].nm.length > 4 ? '1.2' : '1.45', 'font-weight':'800', fill:'#fff', 'paint-order':'stroke', stroke:'rgba(6,16,30,.85)', 'stroke-width':'.45', 'font-family':'Pretendard, Malgun Gothic, sans-serif', style:'pointer-events:none'}, g).textContent = POS[k].nm;
+    el('circle', {r:3.6, fill:'transparent'}, g);
+    g.addEventListener('click', e => { e.stopPropagation(); selectPlayer(k); });
+    g.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); selectPlayer(k); } });
+    nodes[k] = g;
+  });
+  OPP.forEach((k, i) => {
+    const g = el('g', {class:'op'}, opp);
+    el('circle', {r:2.0, fill:'url(#gRed)', stroke:'rgba(20,0,6,.7)', 'stroke-width':'.3', opacity:'.88'}, g);
+    el('text', {y:.7, 'text-anchor':'middle', 'font-size':'1.8', 'font-weight':'800', fill:'#fff', 'font-family':'Bebas Neue, Impact, sans-serif'}, g).textContent = i + 1;
+    nodes[k] = g;
+  });
+  const bl = $('ballLayer');
+  nodes.shadow = el('ellipse', {rx:.95, ry:.45, fill:'rgba(0,0,0,.45)'}, bl);
+  const ball = el('g', {filter:'url(#glow)'}, bl);
+  el('circle', {r:.95, fill:'url(#gBall)', stroke:'#1a1a1a', 'stroke-width':'.14'}, ball);
+  el('path', {d:'M0 -.42L.4 -.13L.25 .34L-.25 .34L-.4 -.13Z', fill:'#1a1a1a'}, ball);
+  nodes.ball = ball;
+}
+
+/* =========================================================
+   6. 상태 & 렌더링
+   ========================================================= */
+const S = {si:0, cat:'atk', step:0, t:1, t0:0, D:2000, hold:0, playing:false, speed:1, showOpp:true, sel:null, filter:'all', segs:[]};
+const scn = () => SCN[S.si];
+const cur = () => scn().steps[S.step];
+const BALL_OFF = [1.7, 1.25];
+
+function stepDuration(st) { return (1500 + 900 * (st.ball ? st.ball.length : 0)) / S.speed; }
+
+function arrow(kind, a, b, delay, parent, opts) {
+  const st = STYLE[kind];
+  let d;
+  if (kind === 'drib') d = wavyD(a, b);
+  else if (kind === 'long') { const c = longCtrl(a, b); d = `M${f(a[0])} ${f(a[1])}Q${f(c[0])} ${f(c[1])} ${f(b[0])} ${f(b[1])}`; }
+  else d = `M${f(a[0])} ${f(a[1])}L${f(b[0])} ${f(b[1])}`;
+  const solid = !st.dash && kind !== 'drib';
+  const p = el('path', {d, fill:'none', stroke:st.c, 'stroke-width':st.w, 'stroke-linecap':'round', class: solid ? 'arw draw' : 'arw'}, parent);
+  if (solid) p.setAttribute('pathLength', '1');
+  if (st.dash) p.setAttribute('stroke-dasharray', st.dash);
+  if (st.op) p.setAttribute('opacity', st.op);
+  if (!(opts && opts.noHead)) p.setAttribute('marker-end', `url(#m-${kind})`);
+  p.style.animationDelay = delay + 'ms';
+  return p;
+}
+
+function drawStep(st, D) {
+  ['arrows','oppArrows','callouts','zones'].forEach(id => { $(id).textContent = ''; });
+  const A = $('arrows'), OA = $('oppArrows');
+  const segs = S.segs;
+  const dribblers = new Set(segs.filter(s => s.k === 'drib').map(s => s.from));
+
+  (st.zones || []).forEach(z => {
+    const g = el('g', {class:'zone'}, $('zones'));
+    g.style.animationDelay = (D * .25) + 'ms';
+    const c = CALL_C[z.c] || CALL_C.gold;
+    el('rect', {x:z.x, y:z.y, width:z.w, height:z.h, rx:1.6, fill:c, 'fill-opacity':'.10', stroke:c, 'stroke-width':'.25', 'stroke-dasharray':'1 .6'}, g);
+    el('text', {x:z.x + .8, y:z.y - .7, fill:c, class:'co', style:'font-size:1.75px;animation:none'}, g).textContent = z.label;
+  });
+
+  (st.shadows || []).forEach(sh => {
+    const a = st.P[sh.who], o = holderPos(st, sh.from);
+    const dx = a[0]-o[0], dy = a[1]-o[1], L = Math.hypot(dx, dy) || 1, ux = dx/L, uy = dy/L, nx = -uy, ny = ux;
+    const p0 = [a[0] + ux*2.5, a[1] + uy*2.5], p1 = [a[0] + ux*15, a[1] + uy*15];
+    const pts = [[p0[0]+nx*1.3, p0[1]+ny*1.3], [p1[0]+nx*4.6, p1[1]+ny*4.6], [p1[0]-nx*4.6, p1[1]-ny*4.6], [p0[0]-nx*1.3, p0[1]-ny*1.3]];
+    const poly = el('polygon', {points: pts.map(p => f(p[0]) + ',' + f(p[1])).join(' '), fill:'rgba(79,216,255,.17)', stroke:'rgba(79,216,255,.45)', 'stroke-width':'.15', 'stroke-dasharray':'.6 .5', class:'zone'}, $('zones'));
+    poly.style.animationDelay = (D * .45) + 'ms';
+  });
+
+  const pressers = new Set(st.press || []);
+  ORDER.forEach(k => {
+    const a = st.prevP[k], b = st.P[k];
+    if (dist(a, b) > 2.5 && !dribblers.has(k)) {
+      const [p, q] = shorten(a, b, 0, 2.7);
+      arrow(pressers.has(k) ? 'press' : 'run', p, q, 0, A);
+    }
+  });
+  OPP.forEach(k => {
+    const a = st.prevO[k], b = st.O[k];
+    if (dist(a, b) > 2.5) {
+      const [p, q] = shorten(a, b, 0, 2.4);
+      arrow('opprun', p, q, 0, OA);
+    }
+  });
+  segs.forEach(s => {
+    const a = posAt(st, s.from, s.a);
+    const b = s.k === 'drib' ? posAt(st, s.from, s.b) : posAt(st, s.to, s.b);
+    const [p, q] = s.k === 'drib' ? shorten(a, b, 0, 2.6) : shorten(a, b, 2.6, 2.8);
+    arrow(s.k, p, q, s.a * D, A);
+  });
+  (st.marks || []).forEach(m => {
+    const [p, q] = shorten(st.P[m.from], st.P[m.to], 2.6, 2.6);
+    arrow('block', p, q, 0, A, {noHead:true});
+    const c = lerp(p, q, .5), r = .9;
+    const x = el('path', {d:`M${f(c[0]-r)} ${f(c[1]-r)}L${f(c[0]+r)} ${f(c[1]+r)}M${f(c[0]+r)} ${f(c[1]-r)}L${f(c[0]-r)} ${f(c[1]+r)}`, stroke:STYLE.block.c, 'stroke-width':'.5', 'stroke-linecap':'round', class:'arw'}, A);
+    x.style.animationDelay = '0ms';
+  });
+  (st.callouts || []).forEach(c => {
+    const t = el('text', {x:c.x, y:c.y, 'text-anchor':'middle', fill:CALL_C[c.c] || CALL_C.gold, class: c.big ? 'co big' : 'co'}, $('callouts'));
+    t.textContent = c.t;
+    t.style.animationDelay = (D * .55) + 'ms';
+  });
+}
+
+function ballAt(st, t) {
+  const segs = S.segs;
+  if (!segs.length) return {p:posAt(st, st.prevHolder, t), h:0};
+  if (t <= segs[0].a) return {p:posAt(st, segs[0].from, t), h:0};
+  for (const s of segs) {
+    if (t <= s.b) {
+      const u = (t - s.a) / (s.b - s.a);
+      if (s.k === 'drib') return {p:posAt(st, s.from, t), h:0};
+      const p0 = posAt(st, s.from, s.a), p1 = posAt(st, s.to, s.b);
+      if (s.k === 'long') return {p:lerp(p0, p1, u), air:bez(p0, longCtrl(p0, p1), p1, u), h:Math.sin(Math.PI * u)};
+      return {p:lerp(p0, p1, easeOut(u)), h:0};
+    }
+  }
+  return {p:posAt(st, st.holder, t), h:0};
+}
+
+function renderFrame() {
+  const st = cur(), t = S.t;
+  ORDER.forEach(k => { const p = posAt(st, k, t); nodes[k].setAttribute('transform', `translate(${f(p[0])} ${f(p[1])})`); });
+  OPP.forEach(k => { const p = posAt(st, k, t); nodes[k].setAttribute('transform', `translate(${f(p[0])} ${f(p[1])})`); });
+  const b = ballAt(st, t);
+  const gx = b.p[0] + BALL_OFF[0], gy = b.p[1] + BALL_OFF[1];
+  const air = b.air ? [b.air[0] + BALL_OFF[0], b.air[1] + BALL_OFF[1]] : [gx, gy];
+  const sc = 1 + .7 * b.h;
+  nodes.shadow.setAttribute('cx', f(gx)); nodes.shadow.setAttribute('cy', f(gy + .5));
+  nodes.shadow.setAttribute('opacity', f(1 - .55 * b.h));
+  nodes.ball.setAttribute('transform', `translate(${f(air[0])} ${f(air[1])}) scale(${f(sc)})`);
+  // timeline progress
+  const n = scn().steps.length;
+  const prog = n > 1 ? Math.max(0, (S.step - 1 + (S.step ? S.t : 1)) / (n - 1)) : 1;
+  $('tlFill').style.width = (S.step === 0 ? 0 : prog * 100) + '%';
+}
+
+function go(i, animate) {
+  const steps = scn().steps;
+  i = Math.max(0, Math.min(steps.length - 1, i));
+  S.step = i;
+  const st = steps[i];
+  S.D = stepDuration(st);
+  S.segs = schedule(st);
+  S.t = animate === false ? 1 : 0;
+  S.t0 = performance.now();
+  S.hold = Infinity;
+  drawStep(st, animate === false ? 0 : S.D);
+  renderFrame();
+  if (S.t >= 1) S.hold = performance.now() + 1300 / S.speed;
+  updateUI();
+}
+
+function tick(now) {
+  if (S.t < 1) {
+    S.t = Math.min(1, (now - S.t0) / S.D);
+    renderFrame();
+    if (S.t >= 1) S.hold = now + 1400 / S.speed;
+  } else if (S.playing && now >= S.hold) {
+    if (S.step < scn().steps.length - 1) go(S.step + 1);
+    else { S.playing = false; updatePlayBtn(); }
+  }
+  requestAnimationFrame(tick);
+}
+
+/* =========================================================
+   7. UI
+   ========================================================= */
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function roleOf(k) { const st = cur(); return (st.roles && st.roles[k]) || null; }
+
+function rootOf(si) { const s = SCN[si]; return s.parent ? SCN.find(x => x.id === s.parent) : s; }
+function family(si) {
+  const root = rootOf(si).id;
+  return SCN.map((x, i) => ({x, i})).filter(o => o.x.id === root || o.x.parent === root);
+}
+
+function renderPlans() {
+  const fam = family(S.si), box = $('plans');
+  if (fam.length < 2) { box.hidden = true; box.innerHTML = ''; return; }
+  box.hidden = false;
+  box.innerHTML = '<span class="plans-lbl">막히면?</span>' + fam.map(o =>
+    `<button data-i="${o.i}" aria-pressed="${o.i === S.si}"><b>PLAN ${o.x.plan}</b>${esc(o.x.planName)}</button>`).join('');
+  box.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    const i = +b.dataset.i;
+    if (i === S.si) return;
+    S.si = i; S.playing = false;
+    renderNotes(); renderScnList(); go(0, false);
+  }));
+}
+
+function setCat(cat) {
+  S.cat = cat;
+  $('catBar').querySelectorAll('.cat').forEach(b => b.setAttribute('aria-pressed', b.dataset.cat === cat));
+  if (SCN[S.si].type !== cat) {
+    S.si = SCN.findIndex(s => s.type === cat && !s.parent);
+    S.playing = false;
+    renderNotes(); go(0, false);
+  }
+  renderScnList();
+}
+
+function planBadge(s) {
+  const kids = SCN.filter(x => x.parent === s.id);
+  return kids.length ? `<span class="plan-badge">PLAN ${[s].concat(kids).map(x => x.plan).join('·')}</span>` : '';
+}
+
+function renderScnList() {
+  const active = rootOf(S.si);
+  $('scnList').innerHTML = SCN.map((s, i) => (s.type !== S.cat || s.parent) ? '' : `
+    <button class="scn ${s.type}" data-i="${i}" aria-pressed="${s === active}">
+      <div class="top"><span class="num">${s.num}</span><span class="vs">${esc(s.vs)}</span></div>
+      <h3>${esc(s.title)}</h3>
+      <div class="en">${esc(s.en)}</div>
+      <p>${esc(s.desc)}</p>
+      <div class="lvl">난이도 <b>${'★'.repeat(s.level)}<i>${'★'.repeat(3 - s.level)}</i></b> · ${s.steps.length}단계${planBadge(s)}</div>
+    </button>`).join('');
+  $('scnList').querySelectorAll('.scn').forEach(b => b.addEventListener('click', () => {
+    S.si = +b.dataset.i; S.playing = false;
+    renderScnList(); renderNotes(); go(0, false); updatePlayBtn();
+    $('pitchCard').scrollIntoView({behavior:'smooth', block:'start'});
+  }));
+}
+
+function renderNotes() {
+  const n = scn().notes;
+  const list = arr => '<ul>' + arr.map(x => `<li>${esc(x)}</li>`).join('') + '</ul>';
+  $('pane-notes').innerHTML = `
+    <div class="note-sec when"><h5><i>?</i>언제 쓰나</h5><p>${esc(n.when)}</p></div>
+    <div class="note-sec good"><h5><i>✓</i>핵심 원칙 3가지</h5>${list(n.good)}</div>
+    <div class="note-sec bad"><h5><i>✕</i>자주 하는 실수</h5>${list(n.bad)}</div>
+    <div class="note-sec tip"><h5><i>★</i>감독 팁</h5>${list(n.tip)}</div>`;
+}
+
+function renderChips() {
+  $('chips').innerHTML = FILTERS.map(([k, l]) => `<button data-f="${k}" aria-pressed="${S.filter === k}">${l}</button>`).join('');
+  $('chips').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    S.filter = b.dataset.f; renderChips(); renderRoles(); applyDim();
+  }));
+}
+
+function renderRoles() {
+  const s = scn();
+  const keys = ORDER.filter(k => S.filter === 'all' || POS[k].line === S.filter);
+  $('roleList').innerHTML = keys.map(k => {
+    const r = roleOf(k);
+    return `<button class="role${S.sel === k ? ' sel' : ''}" data-k="${k}">
+      <span class="badge${k === 'GK' ? ' gk' : ''}">${POS[k].n}</span>
+      <div><b>${esc(POS[k].nm)}<small>${k} · ${esc(POS[k].ko)}</small></b>
+      ${r ? `<p><span class="live">이 단계</span>${esc(r)}</p>` : ''}
+      <p class="${r ? 'gen' : ''}">${esc(s.roles[k])}</p></div></button>`;
+  }).join('');
+  $('roleList').querySelectorAll('.role').forEach(b => b.addEventListener('click', () => selectPlayer(b.dataset.k, true)));
+}
+
+function renderStepPane() {
+  const s = scn(), st = cur();
+  $('pane-step').innerHTML = (s.trigger ? `<div class="trigger"><b>언제 PLAN ${s.plan}로?</b>${esc(s.trigger)}</div>` : '') + `
+    <div class="now-card">
+      <div class="tag">STEP ${S.step + 1}</div>
+      <h4>${esc(st.title)}</h4>
+      <p>${esc(st.desc)}</p>
+      <div class="key"><b>포인트</b>${esc(st.key)}</div>
+    </div>
+    <ol class="step-list">${s.steps.map((x, i) => `
+      <li><button data-i="${i}" class="${i === S.step ? 'cur' : (i < S.step ? 'done' : '')}"><span class="n">${i + 1}</span><span>${esc(x.title)}</span></button></li>`).join('')}
+    </ol>`;
+  $('pane-step').querySelectorAll('.step-list button').forEach(b => b.addEventListener('click', () => { S.playing = false; updatePlayBtn(); go(+b.dataset.i); }));
+}
+
+function renderSelbar() {
+  const bar = $('selbar');
+  if (!S.sel) {
+    bar.className = 'selbar';
+    bar.innerHTML = '<span class="hint">👆 경기장의 선수(흰 원)를 누르면 이 단계에서 그 포지션이 해야 할 일이 여기에 나와요.</span>';
+    return;
+  }
+  const k = S.sel, r = roleOf(k);
+  bar.className = 'selbar on';
+  bar.innerHTML = `<span class="sb-num${k === 'GK' ? ' gk' : ''}">${POS[k].n}</span>
+    <div class="sb-txt"><b>${esc(POS[k].nm)} · ${k} · ${esc(POS[k].ko)}</b><p>${esc(r || scn().roles[k])}</p></div>
+    <button class="x" aria-label="선택 해제">✕</button>`;
+  bar.querySelector('.x').addEventListener('click', () => selectPlayer(null));
+}
+
+function renderTimeline() {
+  const n = scn().steps.length;
+  $('tlDots').innerHTML = scn().steps.map((x, i) =>
+    `<button class="tl-dot${i === S.step ? ' cur' : (i < S.step ? ' done' : '')}" style="left:${n > 1 ? i / (n - 1) * 100 : 0}%" data-i="${i}" aria-label="${i + 1}단계: ${esc(x.title)}">${i + 1}</button>`).join('');
+  $('tlDots').querySelectorAll('.tl-dot').forEach(b => b.addEventListener('click', () => { S.playing = false; updatePlayBtn(); go(+b.dataset.i); }));
+}
+
+function applyDim() {
+  ORDER.forEach(k => {
+    const g = nodes[k];
+    g.classList.toggle('dim', S.filter !== 'all' && POS[k].line !== S.filter);
+    g.classList.toggle('sel', S.sel === k);
+  });
+}
+
+function updatePlayBtn() {
+  $('playTxt').textContent = S.playing ? '일시정지' : (S.step === scn().steps.length - 1 && S.t >= 1 ? '처음부터' : '재생');
+  $('icoPlay').innerHTML = S.playing
+    ? '<rect x="6.5" y="5" width="4" height="14" rx="1.2"/><rect x="13.5" y="5" width="4" height="14" rx="1.2"/>'
+    : '<path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/>';
+  $('btnPlay').setAttribute('aria-label', S.playing ? '일시정지' : '재생');
+}
+
+function updateUI() {
+  const s = scn(), st = cur();
+  $('scnEn').textContent = s.en;
+  $('scnTitle').textContent = s.title + (s.plan ? ' · Plan ' + s.plan : '');
+  renderPlans();
+  $('stepNo').textContent = S.step + 1;
+  $('stepTotal').textContent = s.steps.length;
+  $('stepTitle').textContent = st.title;
+  renderStepPane(); renderRoles(); renderSelbar(); renderTimeline(); applyDim(); updatePlayBtn();
+}
+
+function selectPlayer(k, fromList) {
+  S.sel = (S.sel === k && !fromList) ? null : k;
+  renderSelbar(); renderRoles(); applyDim();
+}
+
+function setTab(name) {
+  ['step','roles','notes'].forEach(n => {
+    $('tab-' + n).setAttribute('aria-selected', n === name);
+    $('pane-' + n).hidden = n !== name;
+  });
+}
+
+function togglePlay() {
+  if (S.playing) { S.playing = false; updatePlayBtn(); return; }
+  S.playing = true;
+  const last = scn().steps.length - 1;
+  if (S.step === last && S.t >= 1) go(0);
+  else if (S.t >= 1) S.hold = performance.now();
+  updatePlayBtn();
+}
+
+function bind() {
+  $('catBar').querySelectorAll('.cat').forEach(b => b.addEventListener('click', () => setCat(b.dataset.cat)));
+  $('btnPlay').addEventListener('click', togglePlay);
+  $('btnPrev').addEventListener('click', () => { S.playing = false; go(S.step - 1); });
+  $('btnNext').addEventListener('click', () => { S.playing = false; go(S.step + 1); });
+  $('btnReplay').addEventListener('click', () => { S.playing = false; go(S.step); });
+  $('speedSeg').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    S.speed = +b.dataset.sp;
+    $('speedSeg').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+  }));
+  $('tgOpp').addEventListener('click', e => {
+    S.showOpp = !S.showOpp;
+    e.currentTarget.setAttribute('aria-pressed', S.showOpp);
+    $('opp').style.display = $('oppArrows').style.display = S.showOpp ? '' : 'none';
+  });
+  $('tgLanes').addEventListener('click', e => {
+    const on = e.currentTarget.getAttribute('aria-pressed') !== 'true';
+    e.currentTarget.setAttribute('aria-pressed', on);
+    $('lanes').style.display = on ? '' : 'none';
+  });
+  $('btnFull').addEventListener('click', () => {
+    const card = $('pitchCard');
+    try {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (card.requestFullscreen) card.requestFullscreen();
+      else if (card.webkitRequestFullscreen) card.webkitRequestFullscreen();
+    } catch (err) { /* 전체 화면 미지원 브라우저 */ }
+  });
+  ['step','roles','notes'].forEach(n => $('tab-' + n).addEventListener('click', () => setTab(n)));
+  document.addEventListener('keydown', e => {
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); S.playing = false; go(S.step + 1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); S.playing = false; go(S.step - 1); }
+    else if (e.key === ' ' && tag !== 'button') { e.preventDefault(); togglePlay(); }
+  });
+}
+
+/* =========================================================
+   8. 시작
+   ========================================================= */
+buildDefs();
+buildField();
+buildPlayers();
+renderScnList();
+renderNotes();
+renderChips();
+bind();
+go(0, false);
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>
