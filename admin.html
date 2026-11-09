@@ -50,6 +50,10 @@ input[type=text],input[type=password],input[type=date],input[type=number]{width:
 .btn.primary{background:linear-gradient(135deg,#4f7cff,#2f5bea);border-color:transparent;color:#fff}
 .btn:disabled{opacity:.5;cursor:default}
 .login .btn{width:100%;margin-top:20px}
+.pw{position:relative}
+.pw input{padding-right:64px}
+.pw button{position:absolute;right:6px;top:6px;height:34px;padding:0 10px;border-radius:9px;font-size:12.5px;font-weight:700;color:var(--muted);background:rgba(255,255,255,.06)}
+.pw-hint{font-size:12px;color:var(--muted);margin:6px 0 0}
 .err{color:var(--red);font-size:13px;margin-top:12px;min-height:20px}
 
 /* editor */
@@ -112,9 +116,10 @@ input[type=text],input[type=password],input[type=date],input[type=number]{width:
     <h1>감독 로그인</h1>
     <p>경기 당일 출전 멤버를 정하고 저장하면 단톡방 링크에 바로 반영됩니다.</p>
     <label for="uid">아이디</label>
-    <input type="text" id="uid" autocomplete="username" autocapitalize="off" required>
+    <input type="text" id="uid" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" required>
     <label for="upw">비밀번호</label>
-    <input type="password" id="upw" autocomplete="current-password" required>
+    <div class="pw"><input type="password" id="upw" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false" required><button type="button" id="pwToggle" aria-label="비밀번호 보기" aria-pressed="false">보기</button></div>
+    <p class="pw-hint">한글 비밀번호는 한/영 상태와 상관없이 같은 키를 누르면 됩니다.</p>
     <button class="btn primary" id="btnLogin">로그인</button>
     <div class="err" id="loginErr" role="alert"></div>
   </form>
@@ -172,12 +177,25 @@ const b64d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 let TOKEN = null, SHA = null, L = null, SEL = null, DIRTY = false;   // SEL: {t:'xi', k} | {t:'bench', i}
 
 /* ---------- 로그인: 아이디·비밀번호로 저장소 토큰 복호화 ---------- */
+// 한글을 두벌식 자판 키 입력으로 바꾼다. 비밀번호 칸에서 한글 입력이 막혀 영문으로 쳐져도 같은 키로 인정하기 위해.
+const KO_CHO = ['r','R','s','e','E','f','a','q','Q','t','T','d','w','W','c','z','x','v','g'];
+const KO_JUNG = ['k','o','i','O','j','p','u','P','h','hk','ho','hl','y','n','nj','np','nl','b','m','ml','l'];
+const KO_JONG = ['','r','R','rt','s','sw','sg','e','f','fr','fa','fq','ft','fx','fv','fg','a','q','qt','t','T','d','w','c','z','x','v','g'];
+const KO_JAMO_LIST = ['r','R','rt','s','sw','sg','e','E','f','fr','fa','fq','ft','fx','fv','fg','a','q','Q','qt','t','T','d','w','W','c','z','x','v','g',
+  'k','o','i','O','j','p','u','P','h','hk','ho','hl','y','n','nj','np','nl','b','m','ml','l'];
+const toKeys = s => [...s.normalize('NFC')].map(ch => {
+  const c = ch.charCodeAt(0);
+  if (c >= 0xAC00 && c <= 0xD7A3) { const i = c - 0xAC00; return KO_CHO[Math.floor(i / 588)] + KO_JUNG[Math.floor(i % 588 / 28)] + KO_JONG[i % 28]; }
+  if (c >= 0x3131 && c <= 0x3163) return KO_JAMO_LIST[c - 0x3131];
+  return ch;
+}).join('');
+const credential = (id, pw) => `${id.trim().toLowerCase()}:${toKeys(pw)}`;
 async function unlock(id, pw) {
   const r = await fetch('admin-key.json?t=' + Date.now(), {cache:'no-store'});
   if (!r.ok) throw new Error('관리자 키(admin-key.json)가 아직 설정되지 않았습니다.');
   const k = await r.json();
   const enc = new TextEncoder();
-  const base = await crypto.subtle.importKey('raw', enc.encode(`${id}:${pw}`.normalize('NFC')), 'PBKDF2', false, ['deriveKey']);
+  const base = await crypto.subtle.importKey('raw', enc.encode(credential(id, pw)), 'PBKDF2', false, ['deriveKey']);
   const key = await crypto.subtle.deriveKey({name:'PBKDF2', hash:'SHA-256', salt:b64d(k.salt), iterations:k.iter}, base, {name:'AES-GCM', length:256}, false, ['decrypt']);
   try {
     return new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:b64d(k.iv)}, key, b64d(k.ct)));
@@ -308,6 +326,13 @@ $('login').addEventListener('submit', async e => {
     TOKEN = null;
     $('loginErr').textContent = err.message;
   } finally { btn.disabled = false; btn.textContent = '로그인'; }
+});
+
+$('pwToggle').addEventListener('click', e => {
+  const show = $('upw').type === 'password';
+  $('upw').type = show ? 'text' : 'password';
+  e.currentTarget.textContent = show ? '숨기기' : '보기';
+  e.currentTarget.setAttribute('aria-pressed', show);
 });
 
 $('noInput').addEventListener('input', () => {
