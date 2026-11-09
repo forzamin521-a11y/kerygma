@@ -303,6 +303,21 @@ footer b{font-family:var(--display);letter-spacing:.16em;color:var(--accent);fon
   .beam,.hero-crest img{animation:none}
   *{scroll-behavior:auto}
 }
+/* ---------- Today's lineup ---------- */
+.lineup{padding:16px 20px;margin-bottom:18px}
+.lu-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.lu-head .eyebrow{font-size:11px;letter-spacing:.22em;color:var(--accent);text-transform:uppercase;font-weight:700}
+.lu-head h3{font-size:17px}
+.lu-row{display:flex;gap:12px;padding:8px 0;border-top:1px dashed var(--stroke)}
+.lu-row>b{flex:none;width:52px;font-size:12.5px;color:var(--muted);padding-top:4px}
+.lu-row>div{display:flex;flex-wrap:wrap;gap:6px}
+.lu-row span{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px 0 4px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--stroke);font-size:13px;font-weight:700}
+.lu-row span.sub{padding-left:10px;color:#cdd6ea;font-weight:600}
+.lu-row span.sub i{margin-left:-6px}
+.lu-row i{font-style:normal;font-family:var(--display);font-size:15px;min-width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--kit);color:var(--kit-ink)}
+.lu-row small{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.05em}
+footer .admin-link{display:inline-block;margin-top:8px;font-size:12px;color:var(--dim);text-decoration:none}
+footer .admin-link:hover{color:var(--accent)}
 </style>
 </head>
 <body>
@@ -332,6 +347,8 @@ footer b{font-family:var(--display);letter-spacing:.16em;color:var(--accent);fon
  </div>
  <div class="hero-crest" aria-hidden="true"><img data-emblem alt="" width="250" height="357"></div>
 </section>
+
+<section class="wrap"><div class="lineup glass" id="lineup" aria-label="오늘의 라인업" hidden></div></section>
 
 <div class="wrap cat-bar" id="catBar" role="group" aria-label="전술 분류">
   <button class="cat" data-cat="atk" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M9 5h10v10"/></svg>공격 전개<small>BUILD-UP</small></button>
@@ -430,7 +447,7 @@ footer b{font-family:var(--display);letter-spacing:.16em;color:var(--accent);fon
   </aside>
 </main>
 
-<footer class="wrap"><img class="crest-foot" data-emblem alt="" width="31" height="44"><b>KERYGMA FC</b><br>함께 뛰고, 함께 배우는 팀 · Soli Deo Gloria</footer>
+<footer class="wrap"><img class="crest-foot" data-emblem alt="" width="31" height="44"><b>KERYGMA FC</b><br>함께 뛰고, 함께 배우는 팀 · Soli Deo Gloria<br><a class="admin-link" href="admin.html">감독 전용 · 라인업 관리</a></footer>
 
 <script>
 'use strict';
@@ -1158,13 +1175,14 @@ function buildPlayers() {
     el('circle', {class:'sel-ring', r:3.5, fill:'none', stroke:'#9ec0ff', 'stroke-width':'.4', 'stroke-dasharray':'1 .7'}, g);
     el('ellipse', {cx:.25, cy:.6, rx:2.3, ry:2.1, fill:'rgba(0,0,0,.35)'}, g);
     el('circle', {class:'body', r:2.3, fill: gk ? 'url(#gCyan)' : 'url(#gKit)', stroke: gk ? '#0b1426' : '#2f5bea', 'stroke-width': gk ? '.35' : '.45'}, g);
-    el('text', {y:.78, 'text-anchor':'middle', 'font-size':'2.15', 'font-weight':'800', fill:'#0b1a4a', 'font-family':'Bebas Neue, Impact, sans-serif', style:'pointer-events:none'}, g).textContent = POS[k].n;
-    el('text', {y:4.4, 'text-anchor':'middle', 'font-size': POS[k].nm.length > 8 ? '1.05' : POS[k].nm.length > 4 ? '1.2' : '1.45', 'font-weight':'800', fill:'#fff', 'paint-order':'stroke', stroke:'rgba(6,16,30,.85)', 'stroke-width':'.45', 'font-family':'Pretendard, Malgun Gothic, sans-serif', style:'pointer-events:none'}, g).textContent = POS[k].nm;
+    g._no = el('text', {y:.78, 'text-anchor':'middle', 'font-size':'2.15', 'font-weight':'800', fill:'#0b1a4a', 'font-family':'Bebas Neue, Impact, sans-serif', style:'pointer-events:none'}, g);
+    g._nm = el('text', {y:4.4, 'text-anchor':'middle', 'font-weight':'800', fill:'#fff', 'paint-order':'stroke', stroke:'rgba(6,16,30,.85)', 'stroke-width':'.45', 'font-family':'Pretendard, Malgun Gothic, sans-serif', style:'pointer-events:none'}, g);
     el('circle', {r:3.6, fill:'transparent'}, g);
     g.addEventListener('click', e => { e.stopPropagation(); selectPlayer(k); });
     g.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); selectPlayer(k); } });
     nodes[k] = g;
   });
+  labelPlayers();
   OPP.forEach((k, i) => {
     const g = el('g', {class:'op'}, opp);
     el('circle', {r:2.0, fill:'url(#gRed)', stroke:'rgba(20,0,6,.7)', 'stroke-width':'.3', opacity:'.88'}, g);
@@ -1177,6 +1195,38 @@ function buildPlayers() {
   el('circle', {r:.95, fill:'url(#gBall)', stroke:'#1a1a1a', 'stroke-width':'.14'}, ball);
   el('path', {d:'M0 -.42L.4 -.13L.25 .34L-.25 .34L-.4 -.13Z', fill:'#1a1a1a'}, ball);
   nodes.ball = ball;
+}
+
+function labelPlayers() {
+  ORDER.forEach(k => {
+    const g = nodes[k], p = POS[k];
+    g._no.textContent = p.n ?? '';
+    g._nm.textContent = p.nm;
+    g._nm.setAttribute('font-size', p.nm.length > 8 ? '1.05' : p.nm.length > 4 ? '1.2' : '1.45');
+    g.setAttribute('aria-label', `${p.nm} · ${p.ko}`);
+  });
+}
+
+/* 감독이 관리자 페이지(admin.html)에서 저장한 그날의 라인업 */
+async function loadLineup() {
+  let L;
+  try {
+    const r = await fetch('lineup.json?t=' + Date.now(), {cache:'no-store'});
+    if (!r.ok) return;
+    L = await r.json();
+  } catch (e) { return; }
+  ORDER.forEach(k => { const p = L.xi && L.xi[k]; if (p) { POS[k].nm = p.name; POS[k].n = p.no; } });
+  labelPlayers();
+  if (S.sel) renderSelbar();
+  if (!$('pane-roles').hidden) renderRoles();
+  const d = L.date ? new Date(L.date + 'T00:00:00') : null;
+  const when = d ? `${d.getMonth() + 1}월 ${d.getDate()}일 (${'일월화수목금토'[d.getDay()]})` : '기본 라인업';
+  const no = p => (p.no ?? '') === '' ? '' : `<i>${esc(p.no)}</i>`;
+  $('lineup').innerHTML = `
+    <div class="lu-head"><span class="eyebrow">Today's Lineup</span><h3>${esc(when)}${L.match ? ` · ${esc(L.match)}` : ''}</h3></div>
+    <div class="lu-row"><b>선발</b><div>${ORDER.map(k => `<span>${no(L.xi[k])}${esc(L.xi[k].name)}<small>${k}</small></span>`).join('')}</div></div>
+    <div class="lu-row"><b>후보 ${(L.bench || []).length}</b><div>${(L.bench || []).map(p => `<span class="sub">${no(p)}${esc(p.name)}</span>`).join('')}</div></div>`;
+  $('lineup').hidden = false;
 }
 
 /* =========================================================
@@ -1406,7 +1456,7 @@ function renderRoles() {
   $('roleList').innerHTML = keys.map(k => {
     const r = roleOf(k);
     return `<button class="role${S.sel === k ? ' sel' : ''}" data-k="${k}">
-      <span class="badge${k === 'GK' ? ' gk' : ''}">${POS[k].n}</span>
+      <span class="badge${k === 'GK' ? ' gk' : ''}">${POS[k].n ?? '–'}</span>
       <div><b>${esc(POS[k].nm)}<small>${k} · ${esc(POS[k].ko)}</small></b>
       ${r ? `<p><span class="live">이 단계</span>${esc(r)}</p>` : ''}
       <p class="${r ? 'gen' : ''}">${esc(s.roles[k])}</p></div></button>`;
@@ -1438,7 +1488,7 @@ function renderSelbar() {
   }
   const k = S.sel, r = roleOf(k);
   bar.className = 'selbar on';
-  bar.innerHTML = `<span class="sb-num${k === 'GK' ? ' gk' : ''}">${POS[k].n}</span>
+  bar.innerHTML = `<span class="sb-num${k === 'GK' ? ' gk' : ''}">${POS[k].n ?? '–'}</span>
     <div class="sb-txt"><b>${esc(POS[k].nm)} · ${k} · ${esc(POS[k].ko)}</b><p>${esc(r || scn().roles[k])}</p></div>
     <button class="x" aria-label="선택 해제">✕</button>`;
   bar.querySelector('.x').addEventListener('click', () => selectPlayer(null));
@@ -1549,6 +1599,7 @@ renderChips();
 bind();
 go(0, false);
 requestAnimationFrame(tick);
+loadLineup();
 </script>
 </body>
 </html>

@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060a14">
+<meta name="robots" content="noindex">
+<title>KERYGMA FC 라인업 관리</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --bg:#060a14;
+  --glass:rgba(15,24,45,.62);
+  --stroke:rgba(255,255,255,.09);
+  --stroke-accent:rgba(96,140,255,.5);
+  --text:#eaf0fc;
+  --muted:#93a0bd;
+  --accent:#7aa2ff;
+  --accent-2:#2f5bea;
+  --kit-ink:#0b1a4a;
+  --cyan:#4fd8ff;
+  --lime:#a6f25c;
+  --red:#ff5d73;
+  --gold:#f3c560;
+  --display:'Bebas Neue',Impact,'Arial Narrow',sans-serif;
+  --sans:'Pretendard','Pretendard Variable',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);color:var(--text);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;word-break:keep-all;
+  background:radial-gradient(900px 500px at 15% -10%,rgba(79,124,255,.16),transparent 60%),radial-gradient(900px 600px at 50% 115%,rgba(34,150,84,.18),transparent 62%),linear-gradient(180deg,#070d1a,#05080f) fixed}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+.glass{background:var(--glass);border:1px solid var(--stroke);border-radius:20px;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 24px 70px -28px rgba(0,0,0,.75)}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;height:64px}
+header b{font-family:var(--display);font-size:24px;letter-spacing:.06em}
+header small{display:block;font-size:11px;color:var(--muted);letter-spacing:.14em;margin-top:-4px}
+header a{font-size:13px;color:var(--accent);text-decoration:none;border:1px solid var(--stroke-accent);padding:6px 12px;border-radius:999px}
+
+/* login */
+.login{max-width:380px;margin:12vh auto 0;padding:28px 24px}
+.login h1{font-size:22px;margin-bottom:4px}
+.login p{color:var(--muted);font-size:13.5px;margin-bottom:20px}
+label{display:block;font-size:12.5px;color:var(--muted);font-weight:700;margin:12px 0 6px}
+input[type=text],input[type=password],input[type=date],input[type=number]{width:100%;height:46px;padding:0 14px;border-radius:12px;border:1px solid var(--stroke);background:rgba(0,0,0,.28)}
+.btn{height:46px;padding:0 18px;border-radius:12px;border:1px solid var(--stroke);background:rgba(255,255,255,.05);font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.primary{background:linear-gradient(135deg,#4f7cff,#2f5bea);border-color:transparent;color:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+.login .btn{width:100%;margin-top:20px}
+.err{color:var(--red);font-size:13px;margin-top:12px;min-height:20px}
+
+/* editor */
+.bar{display:grid;grid-template-columns:180px minmax(0,1fr);gap:12px;padding:16px;margin-bottom:16px}
+.bar label{margin-top:0}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
+.card{padding:16px}
+.card h2{font-size:15px;display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.card h2 small{font-size:12px;color:var(--muted);font-weight:600}
+.pitch{position:relative;aspect-ratio:68/88;border-radius:14px;overflow:hidden;
+  background:repeating-linear-gradient(180deg,#1f7a45 0 11.1%,#1b6f3e 11.1% 22.2%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.55),inset 0 0 60px rgba(0,0,0,.35)}
+.pitch::before{content:"";position:absolute;left:22%;right:22%;bottom:0;height:16%;border:2px solid rgba(255,255,255,.5);border-bottom:0}
+.pitch::after{content:"";position:absolute;left:50%;top:0;width:28%;aspect-ratio:1;border:2px solid rgba(255,255,255,.5);border-radius:50%;transform:translate(-50%,-50%)}
+.slot{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:3px;width:76px;z-index:1}
+.dot{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:22px;color:var(--kit-ink);
+  background:radial-gradient(circle at 35% 30%,#fff,#eef2fb 60%,#b9c6e4);box-shadow:0 0 0 2.5px #2f5bea,0 4px 10px rgba(0,0,0,.4);transition:transform .15s,box-shadow .15s}
+.slot.gk .dot{background:radial-gradient(circle at 35% 30%,#c9f4ff,#4fd8ff 55%,#1b8fb8);box-shadow:0 0 0 2.5px #0b1426,0 4px 10px rgba(0,0,0,.4)}
+.slot .nm{font-size:12.5px;font-weight:800;text-shadow:0 1px 3px rgba(0,0,0,.9);white-space:nowrap}
+.slot .ps{font-size:10px;color:rgba(255,255,255,.75);font-weight:700;letter-spacing:.06em;text-shadow:0 1px 2px rgba(0,0,0,.9)}
+.sel .dot{transform:scale(1.12);box-shadow:0 0 0 3px var(--gold),0 0 18px var(--gold)}
+.target .dot{box-shadow:0 0 0 2.5px var(--lime),0 0 12px rgba(166,242,92,.6)}
+
+.bench{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.sub{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;border:1px solid var(--stroke);background:rgba(255,255,255,.03);text-align:left;min-height:48px}
+.sub .no{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:16px;background:rgba(255,255,255,.1);color:var(--text)}
+.sub b{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sub.sel{border-color:var(--gold);background:rgba(243,197,96,.12)}
+.sub.target{border-color:rgba(166,242,92,.6)}
+
+.hint{font-size:13px;color:var(--muted);padding:12px 14px;border-radius:12px;border:1px dashed var(--stroke);margin-top:12px;min-height:46px}
+.hint b{color:var(--gold)}
+.edit{display:flex;align-items:flex-end;gap:8px;margin-top:10px}
+.edit div{flex:1}
+.edit label{margin-top:0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 40px}
+.actions .primary{flex:1;min-width:200px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:12px 18px;border-radius:12px;background:#0f1a33;border:1px solid var(--stroke-accent);font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:calc(100% - 32px)}
+.toast.bad{border-color:var(--red)}
+
+@media (max-width:820px){
+  .grid{grid-template-columns:minmax(0,1fr)}
+  .bar{grid-template-columns:minmax(0,1fr)}
+  .slot{width:64px}
+  .dot{width:38px;height:38px;font-size:19px}
+  .slot .nm{font-size:11.5px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div><b>KERYGMA FC</b><small>LINEUP ADMIN</small></div>
+    <a href="./">전술 노트 보기</a>
+  </header>
+
+  <form class="login glass" id="login" autocomplete="on">
+    <h1>감독 로그인</h1>
+    <p>경기 당일 출전 멤버를 정하고 저장하면 단톡방 링크에 바로 반영됩니다.</p>
+    <label for="uid">아이디</label>
+    <input type="text" id="uid" autocomplete="username" autocapitalize="off" required>
+    <label for="upw">비밀번호</label>
+    <input type="password" id="upw" autocomplete="current-password" required>
+    <button class="btn primary" id="btnLogin">로그인</button>
+    <div class="err" id="loginErr" role="alert"></div>
+  </form>
+
+  <main id="editor" hidden>
+    <section class="bar glass">
+      <div><label for="mDate">경기 날짜</label><input type="date" id="mDate"></div>
+      <div><label for="mTitle">경기 이름 / 상대팀</label><input type="text" id="mTitle" placeholder="예: vs 새소망FC 친선전"></div>
+    </section>
+
+    <div class="grid">
+      <section class="card glass">
+        <h2>선발 11명 <small>4-3-3</small></h2>
+        <div class="pitch" id="pitch"></div>
+      </section>
+      <section class="card glass">
+        <h2>후보 선수 <small id="benchCount"></small></h2>
+        <div class="bench" id="bench"></div>
+        <div class="hint" id="hint"></div>
+        <div class="edit" id="edit" hidden>
+          <div><label for="noInput">등번호</label><input type="number" id="noInput" min="0" max="99" inputmode="numeric" placeholder="없음"></div>
+          <button class="btn" id="btnDesel" type="button">선택 해제</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="btnSave" type="button">라인업 저장</button>
+      <button class="btn" id="btnReload" type="button">저장된 라인업 다시 불러오기</button>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+'use strict';
+const REPO = 'forzamin521-a11y/kerygma';
+const FILE = 'lineup.json';
+const API = `https://api.github.com/repos/${REPO}/contents/${FILE}`;
+
+/* 4-3-3 자리 (세로 경기장, 위가 상대 골문) */
+const SLOTS = {
+  LW:{ko:'왼쪽 윙어',x:14,y:20}, ST:{ko:'스트라이커',x:50,y:13}, RW:{ko:'오른쪽 윙어',x:86,y:20},
+  LCM:{ko:'왼쪽 미드',x:24,y:42}, RCM:{ko:'오른쪽 미드',x:76,y:42}, DM:{ko:'수비형 미드',x:50,y:55},
+  LB:{ko:'왼쪽 풀백',x:11,y:70}, LCB:{ko:'왼쪽 센터백',x:35,y:77}, RCB:{ko:'오른쪽 센터백',x:65,y:77}, RB:{ko:'오른쪽 풀백',x:89,y:70},
+  GK:{ko:'골키퍼',x:50,y:91}
+};
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const b64d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+
+let TOKEN = null, SHA = null, L = null, SEL = null;   // SEL: {t:'xi', k} | {t:'bench', i}
+
+/* ---------- 로그인: 아이디·비밀번호로 저장소 토큰 복호화 ---------- */
+async function unlock(id, pw) {
+  const r = await fetch('admin-key.json?t=' + Date.now(), {cache:'no-store'});
+  if (!r.ok) throw new Error('관리자 키(admin-key.json)가 아직 설정되지 않았습니다.');
+  const k = await r.json();
+  const enc = new TextEncoder();
+  const base = await crypto.subtle.importKey('raw', enc.encode(`${id}:${pw}`.normalize('NFC')), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({name:'PBKDF2', hash:'SHA-256', salt:b64d(k.salt), iterations:k.iter}, base, {name:'AES-GCM', length:256}, false, ['decrypt']);
+  try {
+    return new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:b64d(k.iv)}, key, b64d(k.ct)));
+  } catch (e) { throw new Error('아이디 또는 비밀번호가 맞지 않습니다.'); }
+}
+
+function gh(method, body) {
+  return fetch(API + (method === 'GET' ? '?t=' + Date.now() : ''), {
+    method, cache:'no-store',
+    headers:{Authorization:`Bearer ${TOKEN}`, Accept:'application/vnd.github+json', 'Content-Type':'application/json'},
+    body: body && JSON.stringify(body)
+  });
+}
+
+async function loadLineup() {
+  const r = await gh('GET');
+  if (!r.ok) throw new Error(`라인업을 불러오지 못했습니다 (${r.status})`);
+  const j = await r.json();
+  SHA = j.sha;
+  L = JSON.parse(new TextDecoder().decode(b64d(j.content.replace(/\n/g, ''))));
+  SEL = null;
+  $('mDate').value = L.date || new Date().toLocaleDateString('sv-SE');
+  $('mTitle').value = L.match || '';
+  render();
+}
+
+async function saveLineup() {
+  L.date = $('mDate').value;
+  L.match = $('mTitle').value.trim();
+  L.updated = new Date().toISOString();
+  const bytes = new TextEncoder().encode(JSON.stringify(L, null, 2) + '\n');
+  let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
+  const r = await gh('PUT', {message:`라인업 저장: ${L.date}${L.match ? ' ' + L.match : ''}`, content:btoa(bin), sha:SHA});
+  if (r.status === 409) throw new Error('다른 곳에서 먼저 저장했습니다. 다시 불러온 뒤 저장하세요.');
+  if (!r.ok) throw new Error(`저장 실패 (${r.status})`);
+  SHA = (await r.json()).content.sha;
+}
+
+/* ---------- 화면 ---------- */
+function noTxt(p) { return p.no === null || p.no === undefined || p.no === '' ? '–' : p.no; }
+function isSel(t, key) { return SEL && SEL.t === t && (t === 'xi' ? SEL.k === key : SEL.i === key); }
+
+function render() {
+  const anySel = !!SEL;
+  $('pitch').innerHTML = Object.entries(SLOTS).map(([k, s]) => {
+    const p = L.xi[k];
+    const cls = ['slot', k === 'GK' ? 'gk' : '', isSel('xi', k) ? 'sel' : (anySel ? 'target' : '')].join(' ');
+    return `<button class="${cls}" data-k="${k}" style="left:${s.x}%;top:${s.y}%" aria-label="${esc(s.ko)} ${esc(p.name)}">
+      <span class="dot">${esc(noTxt(p))}</span><span class="nm">${esc(p.name)}</span><span class="ps">${k}</span></button>`;
+  }).join('');
+  $('bench').innerHTML = L.bench.map((p, i) =>
+    `<button class="sub${isSel('bench', i) ? ' sel' : (SEL && SEL.t === 'xi' ? ' target' : '')}" data-i="${i}">
+      <span class="no">${esc(noTxt(p))}</span><b>${esc(p.name)}</b></button>`).join('');
+  $('benchCount').textContent = `${L.bench.length}명`;
+
+  const p = selPlayer();
+  $('edit').hidden = !p;
+  if (p) {
+    $('noInput').value = p.no ?? '';
+    $('hint').innerHTML = SEL.t === 'xi'
+      ? `<b>${esc(p.name)}</b> (${SLOTS[SEL.k].ko}) 선택됨 → 후보를 누르면 교체, 다른 선발 선수를 누르면 자리 맞바꾸기.`
+      : `<b>${esc(p.name)}</b> 선택됨 → 경기장에서 들어갈 자리의 선수를 누르면 교체.`;
+  } else {
+    $('hint').textContent = '선수를 누른 다음, 바꿀 상대를 누르세요. (선발 ↔ 후보 교체 / 선발끼리 자리 바꾸기)';
+  }
+  $('pitch').querySelectorAll('.slot').forEach(b => b.addEventListener('click', () => pick({t:'xi', k:b.dataset.k})));
+  $('bench').querySelectorAll('.sub').forEach(b => b.addEventListener('click', () => pick({t:'bench', i:+b.dataset.i})));
+}
+
+function selPlayer() { return !SEL ? null : SEL.t === 'xi' ? L.xi[SEL.k] : L.bench[SEL.i]; }
+function get(r) { return r.t === 'xi' ? L.xi[r.k] : L.bench[r.i]; }
+function put(r, p) { if (r.t === 'xi') L.xi[r.k] = p; else L.bench[r.i] = p; }
+
+function pick(r) {
+  if (!SEL) { SEL = r; return render(); }
+  const same = SEL.t === r.t && (r.t === 'xi' ? SEL.k === r.k : SEL.i === r.i);
+  if (same) { SEL = null; return render(); }
+  if (SEL.t === 'bench' && r.t === 'bench') { SEL = r; return render(); }   // 후보끼리는 선택만 옮김
+  const a = get(SEL), b = get(r);
+  put(SEL, b); put(r, a);
+  const [out, inn] = SEL.t === 'xi' ? [a, b] : [b, a];
+  toast(SEL.t !== r.t ? `교체: ${inn.name} IN · ${out.name} OUT` : `자리 바꿈: ${a.name} ↔ ${b.name}`);
+  SEL = null;
+  render();
+}
+
+let toastT;
+function toast(msg, bad) {
+  const t = $('toast');
+  t.textContent = msg; t.className = 'toast' + (bad ? ' bad' : ''); t.hidden = false;
+  clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, bad ? 5000 : 2600);
+}
+
+/* ---------- 이벤트 ---------- */
+$('login').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('btnLogin');
+  btn.disabled = true; btn.textContent = '확인 중…'; $('loginErr').textContent = '';
+  try {
+    TOKEN = await unlock($('uid').value.trim(), $('upw').value);
+    await loadLineup();
+    $('login').hidden = true; $('editor').hidden = false;
+  } catch (err) {
+    TOKEN = null;
+    $('loginErr').textContent = err.message;
+  } finally { btn.disabled = false; btn.textContent = '로그인'; }
+});
+
+$('noInput').addEventListener('input', () => {
+  const p = selPlayer(); if (!p) return;
+  const v = $('noInput').value.trim();
+  p.no = v === '' ? null : Math.max(0, Math.min(99, parseInt(v, 10) || 0));
+  render();
+  $('noInput').focus();
+});
+$('btnDesel').addEventListener('click', () => { SEL = null; render(); });
+
+$('btnSave').addEventListener('click', async () => {
+  const btn = $('btnSave');
+  btn.disabled = true; btn.textContent = '저장 중…';
+  try { await saveLineup(); toast('저장 완료! 선수들 화면에는 1~2분 뒤 반영됩니다.'); }
+  catch (err) { toast(err.message, true); }
+  finally { btn.disabled = false; btn.textContent = '라인업 저장'; }
+});
+$('btnReload').addEventListener('click', async () => {
+  if (!confirm('저장하지 않은 변경은 사라집니다. 다시 불러올까요?')) return;
+  try { await loadLineup(); toast('저장된 라인업을 불러왔습니다.'); } catch (err) { toast(err.message, true); }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+{
+  "date": "",
+  "match": "",
+  "updated": "",
+  "xi": {
+    "GK": {
+      "name": "윤민석",
+      "no": 1
+    },
+    "LB": {
+      "name": "위종욱",
+      "no": 19
+    },
+    "LCB": {
+      "name": "황지만",
+      "no": 15
+    },
+    "RCB": {
+      "name": "최수덕",
+      "no": 37
+    },
+    "RB": {
+      "name": "박재희",
+      "no": 14
+    },
+    "LCM": {
+      "name": "최이삭",
+      "no": 38
+    },
+    "DM": {
+      "name": "박광민",
+      "no": 5
+    },
+    "RCM": {
+      "name": "김다빈",
+      "no": 9
+    },
+    "LW": {
+      "name": "박준수",
+      "no": 13
+    },
+    "ST": {
+      "name": "문찬하",
+      "no": 7
+    },
+    "RW": {
+      "name": "이슬기",
+      "no": 88
+    }
+  },
+  "bench": [
+    {
+      "name": "김학준",
+      "no": 12
+    },
+    {
+      "name": "김상덕",
+      "no": null
+    },
+    {
+      "name": "오승현",
+      "no": null
+    },
+    {
+      "name": "한민수",
+      "no": null
+    },
+    {
+      "name": "안현만",
+      "no": null
+    },
+    {
+      "name": "곽호연",
+      "no": null
+    },
+    {
+      "name": "문정혁",
+      "no": null
+    },
+    {
+      "name": "유진혁",
+      "no": null
+    },
+    {
+      "name": "장민찬",
+      "no": null
+    },
+    {
+      "name": "장석우",
+      "no": null
+    },
+    {
+      "name": "장현우",
+      "no": null
+    },
+    {
+      "name": "추인호",
+      "no": null
+    },
+    {
+      "name": "목재원",
+      "no": null
+    },
+    {
+      "name": "장종관",
+      "no": null
+    }
+  ]
+}
