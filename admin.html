@@ -55,6 +55,7 @@ input[type=text],input[type=password],input[type=date],input[type=number]{width:
 /* editor */
 .bar{display:grid;grid-template-columns:180px minmax(0,1fr);gap:12px;padding:16px;margin-bottom:16px}
 .bar label{margin-top:0}
+.bar .note{grid-column:1/-1;font-size:12.5px;color:var(--muted)}
 .grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
 .card{padding:16px}
 .card h2{font-size:15px;display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
@@ -79,13 +80,15 @@ input[type=text],input[type=password],input[type=date],input[type=number]{width:
 .sub.sel{border-color:var(--gold);background:rgba(243,197,96,.12)}
 .sub.target{border-color:rgba(166,242,92,.6)}
 
-.hint{font-size:13px;color:var(--muted);padding:12px 14px;border-radius:12px;border:1px dashed var(--stroke);margin-top:12px;min-height:46px}
+.hint{font-size:13px;color:var(--muted);padding:12px 14px;border-radius:12px;border:1px dashed var(--stroke);margin-bottom:12px;min-height:46px}
 .hint b{color:var(--gold)}
-.edit{display:flex;align-items:flex-end;gap:8px;margin-top:10px}
+.edit{display:flex;align-items:flex-end;gap:8px;margin-bottom:12px}
 .edit div{flex:1}
 .edit label{margin-top:0}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 40px}
 .actions .primary{flex:1;min-width:200px}
+.status{flex-basis:100%;font-size:13px;color:var(--muted)}
+.status.dirty{color:var(--gold)}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:12px 18px;border-radius:12px;background:#0f1a33;border:1px solid var(--stroke-accent);font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:calc(100% - 32px)}
 .toast.bad{border-color:var(--red)}
 
@@ -120,6 +123,7 @@ input[type=text],input[type=password],input[type=date],input[type=number]{width:
     <section class="bar glass">
       <div><label for="mDate">경기 날짜</label><input type="date" id="mDate"></div>
       <div><label for="mTitle">경기 이름 / 상대팀</label><input type="text" id="mTitle" placeholder="예: vs 새소망FC 친선전"></div>
+      <p class="note">날짜·경기 이름은 저장 기록용이에요. 선수 화면에는 이름과 등번호만 반영됩니다.</p>
     </section>
 
     <div class="grid">
@@ -129,18 +133,19 @@ input[type=text],input[type=password],input[type=date],input[type=number]{width:
       </section>
       <section class="card glass">
         <h2>후보 선수 <small id="benchCount"></small></h2>
-        <div class="bench" id="bench"></div>
         <div class="hint" id="hint"></div>
         <div class="edit" id="edit" hidden>
           <div><label for="noInput">등번호</label><input type="number" id="noInput" min="0" max="99" inputmode="numeric" placeholder="없음"></div>
           <button class="btn" id="btnDesel" type="button">선택 해제</button>
         </div>
+        <div class="bench" id="bench"></div>
       </section>
     </div>
 
     <div class="actions">
       <button class="btn primary" id="btnSave" type="button">라인업 저장</button>
       <button class="btn" id="btnReload" type="button">저장된 라인업 다시 불러오기</button>
+      <p class="status" id="status" aria-live="polite"></p>
     </div>
   </main>
 </div>
@@ -154,17 +159,17 @@ const API = `https://api.github.com/repos/${REPO}/contents/${FILE}`;
 
 /* 4-3-3 자리 (세로 경기장, 위가 상대 골문) */
 const SLOTS = {
-  LW:{ko:'왼쪽 윙어',x:14,y:20}, ST:{ko:'스트라이커',x:50,y:13}, RW:{ko:'오른쪽 윙어',x:86,y:20},
-  LCM:{ko:'왼쪽 미드',x:24,y:42}, RCM:{ko:'오른쪽 미드',x:76,y:42}, DM:{ko:'수비형 미드',x:50,y:55},
-  LB:{ko:'왼쪽 풀백',x:11,y:70}, LCB:{ko:'왼쪽 센터백',x:35,y:77}, RCB:{ko:'오른쪽 센터백',x:65,y:77}, RB:{ko:'오른쪽 풀백',x:89,y:70},
-  GK:{ko:'골키퍼',x:50,y:91}
+  LW:{ko:'왼쪽 윙어',x:14,y:18}, ST:{ko:'스트라이커',x:50,y:11}, RW:{ko:'오른쪽 윙어',x:86,y:18},
+  LCM:{ko:'왼쪽 미드',x:24,y:38}, RCM:{ko:'오른쪽 미드',x:76,y:38}, DM:{ko:'수비형 미드',x:50,y:51},
+  LB:{ko:'왼쪽 풀백',x:11,y:64}, LCB:{ko:'왼쪽 센터백',x:35,y:71}, RCB:{ko:'오른쪽 센터백',x:65,y:71}, RB:{ko:'오른쪽 풀백',x:89,y:64},
+  GK:{ko:'골키퍼',x:50,y:85}
 };
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const b64d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 
-let TOKEN = null, SHA = null, L = null, SEL = null;   // SEL: {t:'xi', k} | {t:'bench', i}
+let TOKEN = null, SHA = null, L = null, SEL = null, DIRTY = false;   // SEL: {t:'xi', k} | {t:'bench', i}
 
 /* ---------- 로그인: 아이디·비밀번호로 저장소 토큰 복호화 ---------- */
 async function unlock(id, pw) {
@@ -179,17 +184,33 @@ async function unlock(id, pw) {
   } catch (e) { throw new Error('아이디 또는 비밀번호가 맞지 않습니다.'); }
 }
 
-function gh(method, body) {
-  return fetch(API + (method === 'GET' ? '?t=' + Date.now() : ''), {
+function ghError(status, what) {
+  if (status === 401) return `${what} 실패: 저장 권한(토큰)이 만료됐거나 잘못됐습니다. 토큰을 새로 발급해야 합니다.`;
+  if (status === 403 || status === 404) return `${what} 실패: 저장소 접근 권한이 없습니다. 토큰 권한을 확인하세요.`;
+  if (status === 409 || status === 422) return '다른 곳에서 먼저 저장했습니다. 다시 불러온 뒤 저장하세요.';
+  return `${what} 실패 (${status}). 잠시 뒤 다시 시도하세요.`;
+}
+
+async function gh(method, body) {
+  try {
+    return await fetch(API + (method === 'GET' ? '?t=' + Date.now() : ''), {
     method, cache:'no-store',
     headers:{Authorization:`Bearer ${TOKEN}`, Accept:'application/vnd.github+json', 'Content-Type':'application/json'},
     body: body && JSON.stringify(body)
-  });
+    });
+  } catch (e) { throw new Error('인터넷 연결을 확인하세요.'); }
+}
+
+function setDirty(v) {
+  DIRTY = v;
+  const st = $('status');
+  st.className = 'status' + (v ? ' dirty' : '');
+  st.textContent = v ? '● 저장하지 않은 변경이 있어요.' : (L && L.updated ? `마지막 저장: ${new Date(L.updated).toLocaleString('ko-KR')}` : '');
 }
 
 async function loadLineup() {
   const r = await gh('GET');
-  if (!r.ok) throw new Error(`라인업을 불러오지 못했습니다 (${r.status})`);
+  if (!r.ok) throw new Error(ghError(r.status, '라인업 불러오기'));
   const j = await r.json();
   SHA = j.sha;
   L = JSON.parse(new TextDecoder().decode(b64d(j.content.replace(/\n/g, ''))));
@@ -197,6 +218,7 @@ async function loadLineup() {
   $('mDate').value = L.date || new Date().toLocaleDateString('sv-SE');
   $('mTitle').value = L.match || '';
   render();
+  setDirty(false);
 }
 
 async function saveLineup() {
@@ -206,9 +228,15 @@ async function saveLineup() {
   const bytes = new TextEncoder().encode(JSON.stringify(L, null, 2) + '\n');
   let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
   const r = await gh('PUT', {message:`라인업 저장: ${L.date}${L.match ? ' ' + L.match : ''}`, content:btoa(bin), sha:SHA});
-  if (r.status === 409) throw new Error('다른 곳에서 먼저 저장했습니다. 다시 불러온 뒤 저장하세요.');
-  if (!r.ok) throw new Error(`저장 실패 (${r.status})`);
+  if (!r.ok) throw new Error(ghError(r.status, '저장'));
   SHA = (await r.json()).content.sha;
+  setDirty(false);
+}
+
+function dupNumbers() {
+  const seen = {};
+  Object.values(L.xi).forEach(p => { if (p.no !== null && p.no !== undefined && p.no !== '') (seen[p.no] = seen[p.no] || []).push(p.name); });
+  return Object.entries(seen).filter(([, v]) => v.length > 1).map(([n, v]) => `${n}번(${v.join(', ')})`);
 }
 
 /* ---------- 화면 ---------- */
@@ -220,11 +248,11 @@ function render() {
   $('pitch').innerHTML = Object.entries(SLOTS).map(([k, s]) => {
     const p = L.xi[k];
     const cls = ['slot', k === 'GK' ? 'gk' : '', isSel('xi', k) ? 'sel' : (anySel ? 'target' : '')].join(' ');
-    return `<button class="${cls}" data-k="${k}" style="left:${s.x}%;top:${s.y}%" aria-label="${esc(s.ko)} ${esc(p.name)}">
+    return `<button class="${cls}" data-k="${k}" aria-pressed="${isSel('xi', k)}" style="left:${s.x}%;top:${s.y}%" aria-label="${esc(s.ko)} ${esc(p.name)}">
       <span class="dot">${esc(noTxt(p))}</span><span class="nm">${esc(p.name)}</span><span class="ps">${k}</span></button>`;
   }).join('');
   $('bench').innerHTML = L.bench.map((p, i) =>
-    `<button class="sub${isSel('bench', i) ? ' sel' : (SEL && SEL.t === 'xi' ? ' target' : '')}" data-i="${i}">
+    `<button class="sub${isSel('bench', i) ? ' sel' : (SEL && SEL.t === 'xi' ? ' target' : '')}" data-i="${i}" aria-pressed="${isSel('bench', i)}">
       <span class="no">${esc(noTxt(p))}</span><b>${esc(p.name)}</b></button>`).join('');
   $('benchCount').textContent = `${L.bench.length}명`;
 
@@ -257,6 +285,7 @@ function pick(r) {
   toast(SEL.t !== r.t ? `교체: ${inn.name} IN · ${out.name} OUT` : `자리 바꿈: ${a.name} ↔ ${b.name}`);
   SEL = null;
   render();
+  setDirty(true);
 }
 
 let toastT;
@@ -286,11 +315,17 @@ $('noInput').addEventListener('input', () => {
   const v = $('noInput').value.trim();
   p.no = v === '' ? null : Math.max(0, Math.min(99, parseInt(v, 10) || 0));
   render();
+  setDirty(true);
   $('noInput').focus();
 });
 $('btnDesel').addEventListener('click', () => { SEL = null; render(); });
+['mDate', 'mTitle'].forEach(id => $(id).addEventListener('input', () => setDirty(true)));
+window.addEventListener('beforeunload', e => { if (DIRTY) { e.preventDefault(); e.returnValue = ''; } });
 
 $('btnSave').addEventListener('click', async () => {
+  const dup = dupNumbers();
+  if (dup.length && !confirm(`선발 등번호가 겹칩니다: ${dup.join(' / ')}
+그래도 저장할까요?`)) return;
   const btn = $('btnSave');
   btn.disabled = true; btn.textContent = '저장 중…';
   try { await saveLineup(); toast('저장 완료! 선수들 화면에는 1~2분 뒤 반영됩니다.'); }
@@ -298,7 +333,7 @@ $('btnSave').addEventListener('click', async () => {
   finally { btn.disabled = false; btn.textContent = '라인업 저장'; }
 });
 $('btnReload').addEventListener('click', async () => {
-  if (!confirm('저장하지 않은 변경은 사라집니다. 다시 불러올까요?')) return;
+  if (DIRTY && !confirm('저장하지 않은 변경은 사라집니다. 다시 불러올까요?')) return;
   try { await loadLineup(); toast('저장된 라인업을 불러왔습니다.'); } catch (err) { toast(err.message, true); }
 });
 </script>
